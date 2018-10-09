@@ -13,6 +13,37 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src='http://maps.google.com/maps/api/js?key=AIzaSyBM2h_iXQRuo7GzjZ-b30k_Y4EKRMcm4lw'></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="gmaps.js"></script>
+
+    <script type="text/javascript">
+        var map;
+        $(document).ready(function(){
+            map = new GMaps({
+                el: '#map',
+                lat: -12.043333,
+                lng: -77.028333
+            });
+            $('#geocoding_form').submit(function(e){
+                e.preventDefault();
+                GMaps.geocode({
+                    address: $('#inputEventLocation').val().trim(),
+                    callback: function(results, status){
+                        if(status=='OK'){
+                            var latlng = results[0].geometry.location;
+                            map.setCenter(latlng.lat(), latlng.lng());
+                            map.addMarker({
+                                lat: latlng.lat(),
+                                lng: latlng.lng()
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <!-- Navbar -->
@@ -42,5 +73,120 @@
         </a>
     </form>
 </nav>
+
+<!-- Events Form -->
+<form>
+    <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
+        <div class="card-body">
+            <div style="margin-bottom: 3%">
+                <form class="form-inline">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                    data-target="#addEventModal">Add Event
+                            </button>
+                            <button type="button" class="btn btn-danger disabled" id="removeEventButton">Remove Event
+                            </button>
+                        </div>
+                        <div class="form-group col-6">
+                            <input type="text" class="form-control" id="inputFilter" placeholder="Filter">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Add Event Modal -->
+            <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="newEventLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newEventLabel">Event Window</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formAddEvent">
+                                <div class="form-group">
+                                    <label for="inputEventName">Name</label>
+                                    <input type="text" class="form-control" id="inputEventName"
+                                           placeholder="Art Exhibit" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputState">Event Category</label>
+                                    <select id="inputState" class="form-control">
+                                        <option selected value=""></option>
+                                        <option value="edu">Educational</option>
+                                        <option value="fun">Fun</option>
+                                        <option value="rel">Religious</option>
+                                        <option value="vol">Volunteer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEventDescription">Description</label>
+                                    <input type="text" class="form-control" id="inputEventDescription"
+                                           placeholder="This art exhibit...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEventTime">Time</label>
+                                    <input type="text" class="form-control" id="inputEventTime" placeholder="1400">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputEventDate">Date (mm/dd/yyyy)</label>
+                                    <input type="text" class="form-control" id="inputEventDate"
+                                           placeholder="12/25/2018">
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="inputContactPhone">Contact Phone</label>
+                                        <input type="text" class="form-control" id="inputContactPhone"
+                                               placeholder="123 456 7890">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="inputContactEmail">Contact Email</label>
+                                        <input type="text" class="form-control" id="inputContactEmail"
+                                               placeholder="john@web.com">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Window</button>
+                            <button type="button" class="btn btn-primary" id="addContactButton" disabled=true>Save
+                                Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="dataTable" class="table table-bordered" style="white-space: nowrap">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Select</th> <!-- This is for the check box -->
+                    </tr>
+                    </thead>
+
+                    <tbody id="tableContacts">
+                    <!-- Table generated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
 </body>
 </html>
