@@ -37,7 +37,7 @@
     </div>
 
     <form class="form-inline">
-        <a href="login.html">
+        <a href="logout.php">
             <button class="btn btn-outline-warning mr-2 my-sm-0" type="button">Sign Out</button>
         </a>
     </form>

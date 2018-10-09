@@ -31,13 +31,13 @@
                 <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="events.html">Events <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
             </li>
         </ul>
     </div>
 
     <form class="form-inline">
-        <a href="login.html">
+        <a href="logout.php">
             <button class="btn btn-outline-warning mr-2 my-sm-0" type="button">Sign Out</button>
         </a>
     </form>

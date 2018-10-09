@@ -16,10 +16,10 @@
             <span class="ml-2 text-light" style="display: inline-block;">College Events</span>
         </a>
         <form class="form-inline">
-            <a href="login.html">
+            <a href="login.php">
                 <button class="btn btn-outline-warning mr-2 my-sm-0" type="button">Sign In</button>
             </a>
-            <a href="register.html">
+            <a href="register.php">
                 <button class="btn btn-warning my-2 my-sm-0" type="button">Register</button>
             </a>
         </form>
