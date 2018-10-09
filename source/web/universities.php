@@ -28,16 +28,16 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="dashboard.html">Dashboard</a>
+                <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="events.html">Events <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
             </li>
         </ul>
     </div>
 
     <form class="form-inline">
-        <a href="login.html">
+        <a href="login.php">
             <button class="btn btn-outline-warning mr-2 my-sm-0" type="button">Sign Out</button>
         </a>
     </form>
@@ -149,7 +149,7 @@
                     </tr>
                     </thead>
 
-                    <tbody id="tableEvents">
+                    <tbody id="tableUniversities">
                     <!-- Table generated here -->
                     </tbody>
                 </table>
