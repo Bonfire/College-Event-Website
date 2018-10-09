@@ -28,7 +28,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="dashboard.html">Dashboard</a>
+                <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="events.html">Events <span class="sr-only">(current)</span></a>
@@ -149,7 +149,7 @@
                     </tr>
                     </thead>
 
-                    <tbody id="tableUniversities">
+                    <tbody id="tableEvents">
                     <!-- Table generated here -->
                     </tbody>
                 </table>
