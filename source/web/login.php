@@ -8,6 +8,31 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <?php session_start(); ?>
+
+    <?php
+
+    include('database.inc.php');
+
+    if(isset($_POST['login]']) && !empty($_POST['inputEmail']) && !empty($_POST['inputPassword']))
+    {
+        $email = $_POST['inputEmail'];
+        $password = $_POST['inputPassword'];
+
+        $query = $conn->prepare('SELECT id FROM users WHERE email = :email and password = :password');
+        $result = $query->execute([':email' => $email, ':password' => $password]);
+
+        if($result){
+            session_start();
+            $_SESSION['email'] = $email;
+            $_SESSION['userID'] = $result['id'];
+        }
+
+        echo $result['id'];
+    }
+    ?>
+
 </head>
 <body>
     <!-- Navbar -->
@@ -27,7 +52,7 @@
 
     <!-- Login Form -->
     <div class="container-fluid">
-        <form id="login_form">
+        <form id="login_form" action="login.php" method="post">
             <div class="row">
                 <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 10%;">
                     <span class="mx-auto text-light"><h4>Please Sign In</h4></span>
@@ -38,14 +63,13 @@
                     </div>
                     <div class="form-group">
                         <label for="inputPassword" class="text-light">Password</label>
-                        <input type="password" class="form-control" id="inputPassword" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
+                        <input type="password" class="form-control" id="inputPassword"">
                     </div>
-                    <button type="submit" class="btn btn-warning">Sign In</button>
+                    <button type="submit" class="btn btn-warning" value="login">Sign In</button>
                     <hr class="bg-light">
                 </div>
             </div>
         </form>
     </div>
-
 </body>
 </html>
