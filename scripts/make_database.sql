@@ -3,7 +3,9 @@ Part of Zajedno.
 Written by Tiger Sachse.
 */
 
-CONNECT 'jdbc:derby:main_table;create=true';
+CREATE DATABASE IF NOT EXISTS main_database;
+USE main_database;
+CONNECT main_database;
 
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
@@ -54,5 +56,4 @@ CREATE TABLE memberships (
     PRIMARY KEY (username, organization)
 );
 
-DISCONNECT;
-EXIT;
+QUIT;

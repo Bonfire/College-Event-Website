@@ -7,7 +7,7 @@ function update_www {
 }
 
 function run_sql {
-    mysql -u root website < $1
+    mysql -u root -p website < $1
 }
 
 case "$1" in
@@ -18,3 +18,4 @@ case "$1" in
     "--run-sql")
         run_sql $2
         ;;
+esac
