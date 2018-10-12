@@ -17,7 +17,7 @@ function update_www {
 function run_sql {
     for FILE in "$@"
     do
-        mysql -u $USER -p $DATABASE_NAME < $FILE
+        mysql -u $USER -p < $FILE
     done
 }
 
