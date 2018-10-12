@@ -56,4 +56,4 @@ CREATE TABLE memberships (
     PRIMARY KEY (username, organization)
 );
 
-QUIT;
+QUIT
