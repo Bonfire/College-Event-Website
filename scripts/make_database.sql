@@ -7,53 +7,75 @@ CREATE DATABASE IF NOT EXISTS main_database;
 USE main_database;
 CONNECT main_database;
 
-CREATE TABLE users (
-    username VARCHAR(50) PRIMARY KEY,
-    password VARCHAR(20),
-    permissions INT
-);
 CREATE TABLE universities (
-    name VARCHAR(200) PRIMARY KEY,
+    id INT AUTO_INCREMENT,
+    name VARCHAR(200),
     address VARCHAR(300),
     description VARCHAR(1000),
     student_count INT,
-    picture_owner_id INT
+    PRIMARY KEY (id)
+);
+CREATE TABLE users (
+    id INT AUTO_INCREMENT,
+    username VARCHAR(50),
+    password VARCHAR(20),
+    email VARCHAR(200),
+    university_id INT,
+    permission_level VARCHAR(20),
+    PRIMARY KEY (id),
+    FOREIGN KEY (university_id)
+    REFERENCES universities(id)
 );
 CREATE TABLE organizations (
-    name VARCHAR(200) PRIMARY KEY,
-    owner VARCHAR(50)
+    id INT AUTO_INCREMENT,
+    name VARCHAR(200),
+    owner_id INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (owner_id)
+    REFERENCES users(id)
 );
 CREATE TABLE events (
-    name VARCHAR(200) NOT NULL,
+    id INT AUTO_INCREMENT,
+    name VARCHAR(200),
     description VARCHAR(1000),
     category VARCHAR(100),
-    address VARCHAR(300) NOT NULL,
+    address VARCHAR(300),
     publicity_level VARCHAR(100),
-    organization_name VARCHAR(100),
+    organization_id INT,
     event_time INT,
     event_date INT,
     contact_number INT,
     contact_email VARCHAR(100),
-    comment_owner_id INT,
     ratings_count INT,
     ratings_average INT,
-    PRIMARY KEY (name, address)
+    PRIMARY KEY (id),
+    FOREIGN KEY (organization_id)
+    REFERENCES organizations(id)
 );
 CREATE TABLE pictures (
     owner_id INT,
-    filename VARCHAR(200)
+    filename VARCHAR(200),
+    FOREIGN KEY (owner_id)
+    REFERENCES events(id)
 );
 CREATE TABLE comments (
     event_id INT,
-    username VARCHAR(50),
     time INT,
+    user_id INT,
     text VARCHAR(300),
-    PRIMARY KEY (event_id, time)
+    FOREIGN KEY (user_id)
+    REFERENCES users(id),
+    FOREIGN KEY (event_id)
+    REFERENCES events(id)
 );
 CREATE TABLE memberships (
-    organization VARCHAR(200),
-    username VARCHAR(50),
-    PRIMARY KEY (username, organization)
+    user_id INT,
+    organization_id INT,
+    PRIMARY KEY (user_id, organization_id),
+    FOREIGN KEY (user_id)
+    REFERENCES users(id),
+    FOREIGN KEY (organization_id)
+    REFERENCES organizations(id)
 );
 
 QUIT
