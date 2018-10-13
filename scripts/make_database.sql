@@ -8,55 +8,74 @@ USE main_database;
 CONNECT main_database;
 
 CREATE TABLE users (
-    user_id INT PRIMARY KEY IDENTITY,
+    id INT IDENTITY,
     username VARCHAR(50),
     password VARCHAR(20),
     email VARCHAR(200),
-    university VARCHAR(200),
-    permission_level INT
+    university_id INT,
+    permission_level VARCHAR(20),
+    PRIMARY KEY (id),
+    FOREIGN KEY (university_id)
+    REFERENCES (universities),
 );
 CREATE TABLE universities (
-    name VARCHAR(200) PRIMARY KEY,
+    id INT IDENTITY,
+    name VARCHAR(200),
     address VARCHAR(300),
     description VARCHAR(1000),
     student_count INT,
-    picture_owner_id INT
+    PRIMARY KEY (id),
 );
 CREATE TABLE organizations (
-    name VARCHAR(200) PRIMARY KEY,
-    owner VARCHAR(50)
+    id INT IDENTITY,
+    name VARCHAR(200),
+    owner_id INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (owner_id)
+    REFERENCES (users),
 );
 CREATE TABLE events (
-    name VARCHAR(200) NOT NULL,
+    id IDENTITY,
+    name VARCHAR(200),
     description VARCHAR(1000),
     category VARCHAR(100),
-    address VARCHAR(300) NOT NULL,
+    address VARCHAR(300),
     publicity_level VARCHAR(100),
-    organization_name VARCHAR(100),
+    organization_id INT,
     event_time INT,
     event_date INT,
     contact_number INT,
     contact_email VARCHAR(100),
-    comment_owner_id INT,
     ratings_count INT,
     ratings_average INT,
-    PRIMARY KEY (name, address)
+    PRIMARY KEY (id),
+    FOREIGN KEY (organization_id)
+    REFERENCES (organizations),
 );
 CREATE TABLE pictures (
     owner_id INT,
-    filename VARCHAR(200)
+    filename VARCHAR(200),
+    FOREIGN KEY (owner_id)
+    REFERENCES (events),
 );
 CREATE TABLE comments (
     event_id INT,
-    username VARCHAR(50),
     time INT,
+    user_id INT,
     text VARCHAR(300),
-    PRIMARY KEY (event_id, time)
+    FOREIGN KEY (user_id)
+    REFERENCES (users),
+    FOREIGN KEY (event_id)
+    REFERENCES (events),
 );
 CREATE TABLE memberships (
-    organization VARCHAR(200),
-    username VARCHAR(50),
-    PRIMARY KEY (username, organization)
+    user_id INT,
+    organization_id INT,
+    PRIMARY KEY (username, organization),
+    FOREIGN KEY (user_id)
+    REFERENCES (users),
+    FOREIGN KEY (organization_id)
+    REFERENCES (organizations),
 );
 
 QUIT
