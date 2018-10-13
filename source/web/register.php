@@ -16,19 +16,21 @@
 
     <?php
 
-    /*
+/*
     if(!isset($_SESSION)){
         session_start();
     }
 
     include('database.inc.php');
-    */
+*/
 
-    if(!empty($_POST))
+    if(empty($_POST))
     {
-        if(!isset($_POST['inputFirstName']) && !isset($_POST['inputLastName'])
-            && !isset($_POST['inputEmail']) && !isset($_POST['inputPassword'])) 
+        if(isset($_POST['inputFirstName']) && isset($_POST['inputLastName'])
+            && isset($_POST['inputEmail']) && isset($_POST['inputPassword'])) 
         {
+            echo "entry full";
+
             $name = $_POST['inputFirstName'];
             $name .= " ";
             $name .= $_POST['inputLastName'];
@@ -37,7 +39,7 @@
             $pass = $_POST['inputPassword'];
 
             $query = $conn->prepare('SELECT * FROM users WHERE email = :email');
-            $result = $query->execute([':email' => $email);
+            $result = $query->execute([':email' => $email]);
 
             if($result)
             {
@@ -56,11 +58,19 @@
             }
             
         }
+
+        // redirect to either login page or directly into database view
+        echo "  <script>
+                window.location.href = 'http://www.google.com';
+                </script>";
+        
     }
     else{
         echo "Post empty";
     }
+
 ?>
+
 
 </head>
 <body>
@@ -81,7 +91,7 @@
 
 <!-- Register Form -->
 <div class="container-fluid">
-    <form id="registration_form">
+    <form id="registration_form" action="register.php" method="post">
         <div class="row">
             <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 5%;">
                 <div style="text-align: center;" class="text-light"><h4>Register Here</h4></div>
