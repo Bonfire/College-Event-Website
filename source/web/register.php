@@ -14,6 +14,54 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
 
+    <?php
+
+    /*
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    include('database.inc.php');
+    */
+
+    if(!empty($_POST))
+    {
+        if(!isset($_POST['inputFirstName']) && !isset($_POST['inputLastName'])
+            && !isset($_POST['inputEmail']) && !isset($_POST['inputPassword'])) 
+        {
+            $name = $_POST['inputFirstName'];
+            $name .= " ";
+            $name .= $_POST['inputLastName'];
+
+            $email = $_POST['inputEmail'];
+            $pass = $_POST['inputPassword'];
+
+            $query = $conn->prepare('SELECT * FROM users WHERE email = :email');
+            $result = $query->execute([':email' => $email);
+
+            if($result)
+            {
+                echo"User Account Already Exist";
+            }
+            else
+            {
+                $sql = "INSERT INTO users (username, password, permissions)
+                VALUES ($name, $pass, '1')";
+
+                if ($conn->query($sql) === TRUE) {
+                    echo "New record created successfully";
+                } else {
+                    echo "Error: " . $sql . "<br>" . $conn->error;
+                }
+            }
+            
+        }
+    }
+    else{
+        echo "Post empty";
+    }
+?>
+
 </head>
 <body>
 <!-- Navbar -->
@@ -38,7 +86,7 @@
             <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 5%;">
                 <div style="text-align: center;" class="text-light"><h4>Register Here</h4></div>
                 <hr>
-                <form class="container was-validated" novalidate>
+                <form class="container was-validated" action="" method="POST" novalidate>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputFirstName" class="text-light">First Name</label>
@@ -75,7 +123,7 @@
                         <input type="password" class="form-control" id="inputConfirmPassword" required>
                     </div>
 
-                    <button type="submit" class="btn btn-warning text-dark" id="register" disabled=true>Register
+                    <button type="submit" class="btn btn-warning text-dark" id="register">Register
                     </button>
                 </form>
                 <hr>
