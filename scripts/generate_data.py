@@ -42,7 +42,7 @@ class User:
         password.extend(
             random.choices(
                 string.ascii_lowercase,
-                k=random.randrange(7, 20)
+                k=random.randrange(7, 16)
             )
         )
         password.extend(random.choices(string.digits, k=2))
@@ -77,7 +77,6 @@ class University:
         self.name = self.__generate_name()
         self.address = FAKER.address()
         self.description = FAKER.sentence()#FAKER.text(max_nb_chars=1000)
-        self.student_count = 0
 
     
     def __generate_name(self):
@@ -104,7 +103,7 @@ class University:
 
 # Main entry point to script.
 universities = [University() for count in range(100)]
-users = [User(random.randrange(len(universities))) for count in range(100)]
+users = [User(random.randrange(1, len(universities))) for count in range(100)]
 
 with open("test.sql", "w") as f:
     f.write(HEADER)
