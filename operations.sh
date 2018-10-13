@@ -6,6 +6,8 @@ SCRIPTS="scripts"
 SOURCE_PHP_DIR="source/web"
 DEST_PHP_DIR="/var/www/html"
 DATABASE_NAME="main_database"
+MAKE_SCRIPT="make_database.sql"
+DROP_SCRIPT="drop_database.sql"
 GENERATION_SCRIPT="generate_data.py"
 DUMMY_DATA_SCRIPT="add_sample_data.sql"
 
@@ -33,7 +35,7 @@ function generate_data {
 # Destroy and then rebuild the database, plus add dummy data.
 function rebuild_database {
     generate_data
-    run_sql $DROP_SCRIPT $MAKE_SCRIPT $SCRIPTS/$DUMMY_DATA_SCRIPT
+    run_sql $SCRIPTS/$DROP_SCRIPT $SCRIPTS/$MAKE_SCRIPT $SCRIPTS/$DUMMY_DATA_SCRIPT
 }
 
 # Main entry-point to this script.
