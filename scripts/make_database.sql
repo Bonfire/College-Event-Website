@@ -8,9 +8,12 @@ USE main_database;
 CONNECT main_database;
 
 CREATE TABLE users (
-    username VARCHAR(50) PRIMARY KEY,
+    user_id INT PRIMARY KEY IDENTITY,
+    username VARCHAR(50),
     password VARCHAR(20),
-    permissions INT
+    email VARCHAR(200),
+    university VARCHAR(200),
+    permission_level INT
 );
 CREATE TABLE universities (
     name VARCHAR(200) PRIMARY KEY,
