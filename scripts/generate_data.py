@@ -3,9 +3,23 @@
 import random
 import string
 
+HEADER = (
+    "/*\n"
+    "Part of Zajedno.\n"
+    "Written by Tiger Sachse.\n"
+    "*/\n\n"
+    "USE main_database;\n"
+    "CONNECT main_database;\n\n"
+)
+FOOTER = "\nQUIT"
+
 class User:
     """"""
-    INSERT = "INSERT INTO users VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');\n"
+    INSERT = (
+        "INSERT INTO users "
+        "(username, password, email, university_id, permission_level) "
+        "VALUES ('{0}', '{1}', '{2}', null, '{3}');\n"
+    )
 
     def __init__(self, universities):
         """"""
@@ -79,10 +93,17 @@ class User:
             self.username,
             self.password,
             self.email,
-            self.university,
+            #self.university,
             self.permission_level
         )
 
+        
+with open("test.sql", "w") as f:
+    f.write(HEADER)
+    f.write(User(()).get_formatted_statement())
+    f.write(User(()).get_formatted_statement())
+    f.write(User(()).get_formatted_statement())
+    f.write(FOOTER)
 
 class University:
     """"""
