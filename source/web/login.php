@@ -44,7 +44,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand">
-            <span class="ml-2 text-light" style="display: inline-block;">Collee Events</span>
+            <span class="ml-2 text-light" style="display: inline-block;">College Events</span>
         </a>
         <form class="form-inline">
             <a href="login.php">
