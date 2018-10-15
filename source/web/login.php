@@ -15,32 +15,6 @@
     ini_set('display_errors', 0);
     error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-    if(!isset($_SESSION)){
-        session_start();
-    }
-
-    include('database.inc.php');
-
-    if(!empty($_POST))
-    {
-        if(!isset($_POST['inputEmail']) && !isset($_POST['inputPassword'])) {
-            $email = $_POST['inputEmail'];
-            $password = $_POST['inputPassword'];
-
-            $query = $conn->prepare('SELECT * FROM users WHERE email = :email and password = :password');
-            $result = $query->execute([':email' => $email, ':password' => $password]);
-
-            if ($result) {
-                $_SESSION['email'] = $email;
-                $_SESSION['userID'] = $result['id'];
-            }
-
-            echo $result['id'];
-        }
-    }
-    else{
-        echo "Post empty";
-    }
     ?>
 
 </head>
@@ -62,7 +36,7 @@
 
     <!-- Login Form -->
     <div class="container-fluid">
-        <form id="login_form" action="" method="post">
+        <form id="login_form" action="user.php?action=get" method="post">
             <div class="row">
                 <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 10%;">
                     <span class="mx-auto text-light"><h4>Please Sign In</h4></span>
