@@ -26,12 +26,9 @@
         $email = $data['inputEmail'];
         $password = $data['inputPassword'];
 
-        if($query = $conn->prepare('SELECT id, username, permission_level  FROM users WHERE email = :email and password = :password'))
+        if($query = $conn->prepare('SELECT id, username, permission_level  FROM users WHERE email = :email AND password = :password'))
         {
-            $query->bindParam(':email',$email);
-            $query->bindParam(':password',$password);
-
-            $query->execute();
+            $query->execute(array(':email' => $email, ':password' => $password));
 
             // See if the user with these credentials exists
             if($row = $query->fetch())
