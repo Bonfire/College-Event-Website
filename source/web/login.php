@@ -36,7 +36,7 @@
 
     <!-- Login Form -->
     <div class="container-fluid">
-        <form id="login_form" action="user.php?action=get" method="post">
+        <form id="login_form" action="user.php?action=login" method="post">
             <div class="row">
                 <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 10%;">
                     <span class="mx-auto text-light"><h4>Please Sign In</h4></span>
