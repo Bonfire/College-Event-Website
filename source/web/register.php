@@ -43,7 +43,10 @@
 
             if($result)
             {
-                echo"User Account Already Exist";
+                echo"<script>
+                    //window.location.href = 'http://www.google.com';
+                    alert("User Account Already Exist");
+                </script>";
             }
             else
             {
@@ -57,12 +60,13 @@
                 }
             }
             
-        }
 
         // redirect to either login page or directly into database view
         echo "  <script>
-                window.location.href = 'http://www.google.com';
+                    //window.location.href = 'http://www.google.com';
+                    alert("Sucesful entry");
                 </script>";
+        }
         
     }
     else{
