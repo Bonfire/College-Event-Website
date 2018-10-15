@@ -11,6 +11,10 @@
 
     <?php
 
+    //get rid of error reporting
+    ini_set('display_errors', 0);
+    error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
     if(!isset($_SESSION)){
         session_start();
     }
@@ -76,6 +80,10 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div style="width: 100%; text-align: center">
+        <br><br>
+        <text>made by <b>Group 5</b></text>
     </div>
 </body>
 </html>
