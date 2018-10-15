@@ -45,7 +45,7 @@
             {
                 echo"<script>
                     //window.location.href = 'http://www.google.com';
-                    alert("User Account Already Exist");
+                    alert(\"User Account Already Exist\");
                 </script>";
             }
             else
@@ -64,7 +64,7 @@
         // redirect to either login page or directly into database view
         echo "  <script>
                     //window.location.href = 'http://www.google.com';
-                    alert("Sucesful entry");
+                    alert(\"Sucesful entry\");
                 </script>";
         }
         
