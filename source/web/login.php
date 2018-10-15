@@ -43,11 +43,11 @@
                     <hr class="bg-light">
                     <div class="form-group">
                         <label for="inputEmail" class="text-light">Email</label>
-                        <input type="text" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="name@email.com" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
+                        <input type="text" class="form-control" name="inputEmail" id="inputEmail" aria-describedby="emailHelp" placeholder="name@email.com" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
                     </div>
                     <div class="form-group">
                         <label for="inputPassword" class="text-light">Password</label>
-                        <input type="password" class="form-control" id="inputPassword">
+                        <input type="password" class="form-control" name="inputPassword" id="inputPassword">
                     </div>
                     <button type="submit" class="btn btn-warning" value="login">Sign In</button>
                     <hr class="bg-light">
