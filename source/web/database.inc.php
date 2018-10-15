@@ -2,8 +2,9 @@
 
 include_once('../config.inc.php');
 
-try {
-    $conn = new PDO("mysql:host=$servername;dbname=website", $username, $password);
+try
+{
+    $conn = new PDO("mysql:host=$servername;dbname=main_database", $username, $password);
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
