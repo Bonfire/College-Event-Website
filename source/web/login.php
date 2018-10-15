@@ -11,32 +11,10 @@
 
     <?php
 
-    if(!isset($_SESSION)){
-        session_start();
-    }
+    //get rid of error reporting
+    ini_set('display_errors', 0);
+    error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-    include('database.inc.php');
-
-    if(!empty($_POST))
-    {
-        if(!isset($_POST['inputEmail']) && !isset($_POST['inputPassword'])) {
-            $email = $_POST['inputEmail'];
-            $password = $_POST['inputPassword'];
-
-            $query = $conn->prepare('SELECT * FROM users WHERE email = :email and password = :password');
-            $result = $query->execute([':email' => $email, ':password' => $password]);
-
-            if ($result) {
-                $_SESSION['email'] = $email;
-                $_SESSION['userID'] = $result['id'];
-            }
-
-            echo $result['id'];
-        }
-    }
-    else{
-        echo "Post empty";
-    }
     ?>
 
 </head>
@@ -58,24 +36,28 @@
 
     <!-- Login Form -->
     <div class="container-fluid">
-        <form id="login_form" action="" method="post">
+        <form id="login_form" action="user.php?action=login" method="post">
             <div class="row">
                 <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 10%;">
                     <span class="mx-auto text-light"><h4>Please Sign In</h4></span>
                     <hr class="bg-light">
                     <div class="form-group">
                         <label for="inputEmail" class="text-light">Email</label>
-                        <input type="text" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="name@email.com" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
+                        <input type="text" class="form-control" name="inputEmail" id="inputEmail" aria-describedby="emailHelp" placeholder="name@email.com" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
                     </div>
                     <div class="form-group">
                         <label for="inputPassword" class="text-light">Password</label>
-                        <input type="password" class="form-control" id="inputPassword">
+                        <input type="password" class="form-control" name="inputPassword" id="inputPassword">
                     </div>
                     <button type="submit" class="btn btn-warning" value="login">Sign In</button>
                     <hr class="bg-light">
                 </div>
             </div>
         </form>
+    </div>
+    <div style="width: 100%; text-align: center">
+        <br><br>
+        <text>made by <b>Group 5</b></text>
     </div>
 </body>
 </html>
