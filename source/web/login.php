@@ -34,7 +34,9 @@
 <?php
 include('database.inc.php');
 
-session_start();
+if(!isset($_SESSION)){
+    session_start();
+}
 
 $invalidLoginAlert = "
         <div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
@@ -69,7 +71,7 @@ $alreadyLoggedInAlert = "
         </button>
         </div>";
 
-if (isset($_SESSION['user'])) {
+if (isset($_SESSION['id'])) {
     echo $alreadyLoggedInAlert;
     ob_end_flush();
     flush();
@@ -91,14 +93,13 @@ if (isset($_POST) && isset($_POST['inputEmail']) && isset($_POST['inputPassword'
 }
 
 if (!empty($email) && !empty($password)) {
-    if ($query = $conn->prepare('SELECT id, username, permission_level  FROM users WHERE email = :email AND password = :password')) {
+    if ($query = $conn->prepare('SELECT id, email, permission_level  FROM users WHERE email = :email AND password = :password')) {
         $query->execute(array(':email' => $email, ':password' => $password));
 
         // See if the user with these credentials exists
         if ($row = $query->fetch()) {
-            session_start();
             $_SESSION['id'] = $row['id'];
-            $_SESSION['user'] = $row['username'];
+            $_SESSION['email'] = $row['email'];
             $_SESSION['perm'] = $row['permission_level'];
 
             echo $successfulLoginAlert;

@@ -31,7 +31,9 @@
 </nav>
 
 <?php
-session_start();
+if(!isset($_SESSION)){
+    session_start();
+}
 
 include('database.inc.php');
 
@@ -67,7 +69,7 @@ $alreadyLoggedInAlert = "
         </button>
         </div>";
 
-if (isset($_SESSION['user'])) {
+if (isset($_SESSION['id'])) {
     echo $alreadyLoggedInAlert;
     ob_end_flush();
     flush();
@@ -105,7 +107,7 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
             echo $userExistsAlert;
         } // Create the user
         else {
-            if ($query = $conn->prepare('INSERT INTO users (firstName, lastName, email, password) VALUES (:firstName, :lastName, :email, :password)')) {
+            if ($query = $conn->prepare('INSERT INTO users (first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password)')) {
                 if ($query->execute(array(':firstName' => $firstName, ':lastName' => $lastName, ':email' => $email, ':password' => $password))) {
                     echo $registrationSuccessAlert;
 
