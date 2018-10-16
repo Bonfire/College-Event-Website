@@ -17,7 +17,8 @@ CREATE TABLE universities (
 );
 CREATE TABLE users (
     id INT AUTO_INCREMENT,
-    username VARCHAR(50),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
     password VARCHAR(20),
     email VARCHAR(200),
     university_id INT,
