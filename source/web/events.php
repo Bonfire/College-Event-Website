@@ -44,7 +44,7 @@
 </nav>
 
 <!-- Events Form -->
-<form>
+<form action="" method="post">
     <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
         <div class="card-body">
             <div style="margin-bottom: 3%">
@@ -92,6 +92,53 @@
                                         <option value="vol">Volunteer</option>
                                     </select>
                                 </div>
+
+                                 <div class="form-group">
+                                    <label for="inputPublicity">Event Publicity</label>
+                                    <select id="inputPublicity" class="form-control">
+                                        <option selected value=""></option>
+                                        <option value="All">Open For All</option>
+                                        <option value="Students">University Students Only</option>
+                                        <option value="Members">RSO Members Only</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputRSO">RSO</label>
+                                    <select id="inputRSO" class="form-control">
+                                        <option selected value=""></option>
+<?php
+include('database.inc.php');
+
+if(!isset($_SESSION)){
+    session_start();
+}
+
+$errorConnectingAlert = "
+        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+        Error querying the database
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+// Check database connection
+if (!$conn) {
+    echo $errorConnectingAlert;
+    die();
+}
+
+$sql="SELECT name,id FROM organizations where organizations.owner_id = "
+
+
+$_SESSION['id']
+
+?>
+
+
+                                    </select>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="inputEventDescription">Description</label>
                                     <input type="text" class="form-control" id="inputEventDescription"
@@ -107,7 +154,10 @@
                                            placeholder="12/25/2018">
                                 </div>
                                 <div class="form-group">
-                                    <label>Location</label>
+                                    <label for="inputLocation">Location</label>
+                                    <input type="text" class="form-control" id="inputLocation"
+                                           placeholder="Address">
+
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-6">
