@@ -5,9 +5,14 @@
 
     <title>College Events - Login</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -64,8 +69,7 @@ $alreadyLoggedInAlert = "
         </button>
         </div>";
 
-if(isset($_SESSION['user']))
-{
+if (isset($_SESSION['user'])) {
     echo $alreadyLoggedInAlert;
     ob_end_flush();
     flush();
@@ -76,19 +80,17 @@ if(isset($_SESSION['user']))
 }
 
 // Check database connection
-if(!$conn)
-{
+if (!$conn) {
     echo $errorConnectingAlert;
     die();
 }
 
-if(isset($_POST) && isset($_POST['inputEmail']) && isset($_POST['inputPassword']))
-{
+if (isset($_POST) && isset($_POST['inputEmail']) && isset($_POST['inputPassword'])) {
     $email = $_POST['inputEmail'];
     $password = $_POST['inputPassword'];
 }
 
-if(!empty($email) && !empty($password)) {
+if (!empty($email) && !empty($password)) {
     if ($query = $conn->prepare('SELECT id, username, permission_level  FROM users WHERE email = :email AND password = :password')) {
         $query->execute(array(':email' => $email, ':password' => $password));
 
@@ -107,9 +109,7 @@ if(!empty($email) && !empty($password)) {
 
             echo "<script type=\"text/javascript\">window.location.href='dashboard.php';</script>";
 
-        }
-        else
-        {
+        } else {
             echo $invalidLoginAlert;
         }
     } else {
@@ -127,13 +127,15 @@ if(!empty($email) && !empty($password)) {
                 <hr class="bg-light">
                 <div class="form-group">
                     <label for="inputEmail" class="text-light">Email</label>
-                    <input type="text" class="form-control" name="inputEmail" id="inputEmail" aria-describedby="emailHelp" placeholder="name@email.com" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
+                    <input type="text" class="form-control" name="inputEmail" id="inputEmail"
+                           aria-describedby="emailHelp" placeholder="name@email.com" required
+                           pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
                 </div>
                 <div class="form-group">
                     <label for="inputPassword" class="text-light">Password</label>
                     <input type="password" class="form-control" name="inputPassword" id="inputPassword">
                 </div>
-                <input type="hidden" name="action" value="login" />
+                <input type="hidden" name="action" value="login"/>
                 <button type="submit" class="btn btn-warning" value="login">Sign In</button>
                 <hr class="bg-light">
             </div>
