@@ -13,69 +13,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
-
-    <?php
-
-/*
-    if(!isset($_SESSION)){
-        session_start();
-    }
-
-    include('database.inc.php');
-*/
-
-    if(empty($_POST))
-    {
-        if(isset($_POST['inputFirstName']) && isset($_POST['inputLastName'])
-            && isset($_POST['inputEmail']) && isset($_POST['inputPassword'])) 
-        {
-            echo "entry full";
-
-            $name = $_POST['inputFirstName'];
-            $name .= " ";
-            $name .= $_POST['inputLastName'];
-
-            $email = $_POST['inputEmail'];
-            $pass = $_POST['inputPassword'];
-
-            $query = $conn->prepare('SELECT * FROM users WHERE email = :email');
-            $result = $query->execute([':email' => $email]);
-
-            if($result)
-            {
-                echo"<script>
-                    //window.location.href = 'http://www.google.com';
-                    alert(\"User Account Already Exist\");
-                </script>";
-            }
-            else
-            {
-                $sql = "INSERT INTO users (username, password, permissions)
-                VALUES ($name, $pass, '1')";
-
-                if ($conn->query($sql) === TRUE) {
-                    echo "New record created successfully";
-                } else {
-                    echo "Error: " . $sql . "<br>" . $conn->error;
-                }
-            }
-            
-
-        // redirect to either login page or directly into database view
-        echo "  <script>
-                    //window.location.href = 'http://www.google.com';
-                    alert(\"Sucesful entry\");
-                </script>";
-        }
-        
-    }
-    else{
-        echo "Post empty";
-    }
-
-?>
-
-
 </head>
 <body>
 <!-- Navbar -->
@@ -93,6 +30,100 @@
     </form>
 </nav>
 
+<?php
+session_start();
+
+include('database.inc.php');
+
+$userExistsAlert = "
+        <div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
+        This email is already taken! <a href=\"login.php\" class=\"alert-link\">Click here to login</a>
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+$registrationSuccessAlert = "
+        <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
+        Account successfully created! Redirecting to login...
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+$errorConnectingAlert = "
+        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+        Error querying the database
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+$alreadyLoggedInAlert = "
+        <div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
+        Already logged in! Redirecting...
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+if (isset($_SESSION['user'])) {
+    echo $alreadyLoggedInAlert;
+    ob_end_flush();
+    flush();
+
+    sleep(3);
+
+    echo "<script type=\"text/javascript\">window.location.href='dashboard.php';</script>";
+}
+
+// Check database connection
+if (!$conn) {
+    echo $errorConnectingAlert;
+    die();
+}
+
+if (isset($_POST)
+    && isset($_POST['inputFirstName'])
+    && isset($_POST['inputLastName'])
+    && isset($_POST['inputEmail'])
+    && isset($_POST['inputConfirmEmail'])
+    && isset($_POST['inputPassword'])
+    && isset($_POST['inputConfirmPassword'])) {
+    $firstName = $_POST['inputFirstName'];
+    $lastName = $_POST['inputLastName'];
+    $email = $_POST['inputEmail'];
+    $password = $_POST['inputPassword'];
+}
+
+if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($password)) {
+    if ($query = $conn->prepare('SELECT * FROM users WHERE email = :email')) {
+        $query->execute(array(':email' => $email));
+
+        // This means that there already exists someone with this email!
+        if ($row = $query->fetch()) {
+            echo $userExistsAlert;
+        } // Create the user
+        else {
+            if ($query = $conn->prepare('INSERT INTO users (firstName, lastName, email, password) VALUES (:firstName, :lastName, :email, :password)')) {
+                if ($query->execute(array(':firstName' => $firstName, ':lastName' => $lastName, ':email' => $email, ':password' => $password))) {
+                    echo $registrationSuccessAlert;
+
+                    ob_end_flush();
+                    flush();
+
+                    sleep(3);
+
+                    echo "<script type=\"text/javascript\">window.location.href='login.php';</script>";
+                } else {
+                    echo $errorConnectingAlert;
+                }
+            }
+        }
+    }
+}
+?>
+
 <!-- Register Form -->
 <div class="container-fluid">
     <form id="registration_form" action="register.php" method="post">
@@ -104,29 +135,33 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputFirstName" class="text-light">First Name</label>
-                            <input type="text" class="form-control" id="inputFirstName" placeholder="John" required>
+                            <input type="text" class="form-control" name="inputFirstName" id="inputFirstName"
+                                   placeholder="John" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputLastName" class="text-light">Last Name</label>
-                            <input type="text" class="form-control" id="inputLastName" placeholder="Smith" required>
+                            <input type="text" class="form-control" name="inputLastName" id="inputLastName"
+                                   placeholder="Smith" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="inputEmail" class="text-light">Email</label>
-                        <input type="text" class="form-control" id="inputEmail" placeholder="name@email.com" required
+                        <input type="text" class="form-control" name="inputEmail" id="inputEmail"
+                               placeholder="name@email.com" required
                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
                         <div class="invalid-feedback" class="text-light">Please provide a valid email.</div>
                     </div>
                     <div class="form-group">
                         <label for="inputConfirmEmail" class="text-light">Confirm Email</label>
-                        <input type="text" class="form-control" id="inputConfirmEmail" placeholder="name@email.com"
+                        <input type="text" class="form-control" name="inputConfirmEmail" id="inputConfirmEmail"
+                               placeholder="name@email.com"
                                required>
 
                     </div>
                     <div class="form-group">
                         <label for="inputPassword" class="text-light">Password</label>
-                        <input type="password" class="form-control" id="inputPassword" required
+                        <input type="password" class="form-control" name="inputPassword" id="inputPassword" required
                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
                         <small id="passwordRequirement" class="form-text text-light">Your password must be at least 8
                             characters long, contain uppercase letters, lowercase letters, and numbers.
@@ -134,7 +169,8 @@
                     </div>
                     <div class="form-group">
                         <label for="inputConfirmPassword" class="text-light">Confirm Password</label>
-                        <input type="password" class="form-control" id="inputConfirmPassword" required>
+                        <input type="password" class="form-control" name="inputConfirmPassword"
+                               id="inputConfirmPassword" required>
                     </div>
 
                     <button type="submit" class="btn btn-warning text-dark" id="register">Register
