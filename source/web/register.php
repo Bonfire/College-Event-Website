@@ -126,7 +126,7 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
 
 <!-- Register Form -->
 <div class="container-fluid">
-    <form id="registration_form" action="register.php" method="post">
+    <form id="registration_form" action="" method="post">
         <div class="row">
             <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 5%;">
                 <div style="text-align: center;" class="text-light"><h4>Register Here</h4></div>
