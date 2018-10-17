@@ -108,31 +108,36 @@
                                     <select id="inputRSO" class="form-control">
                                         <option selected value=""></option>
 <?php
-include('database.inc.php');
+    include('database.inc.php');
 
-if(!isset($_SESSION)){
-    session_start();
-}
+    if(!isset($_SESSION)){
+        //session_start();
+    }
 
-$errorConnectingAlert = "
-        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
-        Error querying the database
-        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
-        <span aria-hidden=\"true\">&times;</span>
-        </button>
-        </div>";
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
 
-// Check database connection
-if (!$conn) {
-    echo $errorConnectingAlert;
-    die();
-}
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
 
-$sql="SELECT name,id FROM organizations where organizations.owner_id = "
+    $id = 3;
+    //$_SESSION['id'];
 
+    $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
+    $result= $conn->query($sql);
 
-$_SESSION['id']
+    foreach ($result as $row){
 
+        echo "<option value=\"$row[id]\">$row[name]</option>"; 
+        }
 ?>
 
 
@@ -184,7 +189,7 @@ $_SESSION['id']
             </div>
 
             <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered" style="white-space: nowrap">
+                <table id="dataTable" class="table table-bordered table-hover" style="white-space: nowrap">
                     <thead>
                     <tr>
                         <th scope="col">Name</th>
@@ -195,13 +200,54 @@ $_SESSION['id']
                         <th scope="col">Location</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Select</th> <!-- This is for the check box -->
+                       <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
 
                     <tbody id="tableEvents">
-                    <!-- Table generated here -->
-                    </tbody>
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        //session_start();
+    }
+
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
+
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
+
+    $id = 3;
+    //$_SESSION['id'];
+
+    $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
+    $result= $conn->query($sql);
+
+    foreach ($result as $row){
+
+        echo "<tr>
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+                <td>Jill</td>
+                <td>Smith</td>
+                <td>50</td>
+                <td>Jill</td>
+                <td>Smith</td>
+            </tr>"; 
+        }
+?>
+                            
+                </tbody>
                 </table>
             </div>
         </div>
