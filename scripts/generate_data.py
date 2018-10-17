@@ -10,11 +10,11 @@ from faker import Faker
 
 # Various constants and global objects.
 FOOTER = "\nQUIT"
-USER_COUNT = 1000
+USER_COUNT = 10000
 EVENT_COUNT = 1000
 PICTURE_COUNT = 200
 COMMENT_COUNT = 2000
-UNIVERSITY_COUNT = 50
+UNIVERSITY_COUNT = 100
 ORGANIZATION_COUNT = 75
 ENGLISH_FAKER = Faker()
 MEMBERSHIP_COUNT = 20000
@@ -116,8 +116,8 @@ class University:
     """Class that holds randomized data for a university entry in a database."""
     INSERT = (
         "INSERT INTO universities "
-        "(name, address, description) "
-        "VALUES ('{0}', '{1}', '{2}');\n"
+        "(name, address, description, student_count) "
+        "VALUES ('{0}', '{1}', '{2}', {3});\n"
     )
 
     def __init__(self):
@@ -126,6 +126,7 @@ class University:
         self.name = self.__generate_name()
         self.address = self.__generate_address()
         self.description = LOREM_FAKER.paragraph()
+        self.student_count = 0
 
     
     def __generate_name(self):
@@ -152,6 +153,7 @@ class University:
             self.name,
             self.address,
             self.description,
+            self.student_count,
         )
 
 
@@ -289,6 +291,7 @@ with open(OUTPUT_PATH, "w") as f:
         f.write(str(user))
     for organization in organizations:
         f.write(str(organization))
+    """
     for event in events:
         f.write(str(event))
     for picture in pictures:
@@ -297,4 +300,5 @@ with open(OUTPUT_PATH, "w") as f:
         f.write(str(comment))
     for membership in memberships:
         f.write(str(membership))
+    """
     f.write(FOOTER)
