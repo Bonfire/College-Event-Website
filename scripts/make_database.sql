@@ -79,4 +79,15 @@ CREATE TABLE memberships (
     REFERENCES organizations(id)
 );
 
+DELIMITER $
+CREATE TRIGGER after_users_increment_university
+AFTER INSERT ON users
+FOR EACH ROW
+BEGIN
+    UPDATE universities
+    SET student_count = student_count + 1
+    WHERE id = NEW.university_id;
+END$
+DELIMITER ;
+
 QUIT
