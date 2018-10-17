@@ -9,14 +9,19 @@ import string
 from faker import Faker
 
 # Various constants and global objects.
-ORG_COUNT = 75
 FOOTER = "\nQUIT"
 USER_COUNT = 1000
+EVENT_COUNT = 1000
+PICTURE_COUNT = 200
+COMMENT_COUNT = 2000
 UNIVERSITY_COUNT = 50
+ORGANIZATION_COUNT = 75
 ENGLISH_FAKER = Faker()
+MEMBERSHIP_COUNT = 20000
 LOREM_FAKER = Faker("lt_LT")
 OUTPUT_PATH = "add_sample_data.sql"
 PRIVILEGE_LEVELS = ("normal", "admin", "superadmin")
+PICTURE_EXTENSIONS = (".jpg", ".png", ".bmp", ".gif", ".jpeg")
 ROAD_TYPES = ("Boulevard", "Lane", "Court", "Road", "Way", "Street")
 EMAIL_DOMAINS = (
     "gmail.com",
@@ -168,11 +173,112 @@ class Organization:
         )
 
 
+class Event:
+    """"""
+    INSERT = (
+        "INSERT INTO events "
+        "(name, description, category, address, publicity_level, organization_id,"
+        " event_time, event_data, contact_number, contact_email, ratings_count,"
+        " ratings_average) VALUES "
+        "('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, {7}, {8}, '{9}', {10}, {11});\n"
+    )
+
+    def __init__(self, organization_id):
+        """"""
+        pass
+
+
+    def __str__(self):
+        """"""
+        return ""
+
+
+class Picture:
+    """"""
+    INSERT = "INSERT INTO pictures VALUES ({0}, '{1}');\n"
+
+    def __init__(self, owner_id):
+        """"""
+        self.owner_id = owner_id
+        self.path = self.__generate_path()
+
+
+    def __generate_path(self):
+        """"""
+        path = []
+        for directory_count in range(1, random.randrange(2, 5)):
+            path.append(LOREM_FAKER.word())
+        path[-1] += random.choice(PICTURE_EXTENSIONS)
+
+        return "/".join(path)
+
+
+    def __str__(self):
+        """"""
+        return self.INSERT.format(
+            self.owner_id,
+            self.path,
+        )
+
+
+class Comment:
+    """"""
+    INSERT = "INSERT INTO comments VALUES ({0}, {1}, {2}, '{3}');\n"
+
+    def __init__(self, event_id, user_id):
+        """"""
+        self.event_id = event_id
+        self.time = random.randrange(1539736761, 1543536000)
+        self.user_id = user_id
+        self.text = LOREM_FAKER.paragraph()
+
+
+    def __str__(self):
+        """"""
+        return self.INSERT.format(
+            self.event_id,
+            self.time,
+            self.user_id,
+            self.text,
+        )
+
+
+class Membership:
+    """"""
+    INSERT = "INSERT INTO memberships VALUES ({0}, {1});\n"
+
+    def __init__(self, user_id, organization_id):
+        """"""
+        self.user_id = user_id
+        self.organization_id = organization_id
+
+
+    def __str__(self):
+        """"""
+        return self.INSERT.format(self.user_id, self.organization_id)
+
+
 # Main entry point to script.
-# Generate random users and universities.
-universities = [University() for count in range(UNIVERSITY_COUNT)]
-users = [User(random.randrange(1, len(universities))) for count in range(USER_COUNT)]
-organizations = [Organization(random.randrange(1, len(users))) for count in range(ORG_COUNT)]
+# Generate random users and universities. ###
+universities = [University() for university in range(UNIVERSITY_COUNT)]
+users = [User(random.randrange(1, len(universities))) for user in range(USER_COUNT)]
+organizations = []
+for organization in range(ORGANIZATION_COUNT):
+    organizations.append(Organization(random.randrange(1, len(users))))
+events = [Event(1) for event in range(EVENT_COUNT)]
+pictures = [Picture(random.randrange(1, len(events))) for count in range(PICTURE_COUNT)]
+comments = []
+for comment in range(COMMENT_COUNT):
+    comments.append(Comment(random.randrange(1, len(events)), random.randrange(1, len(users))))
+memberships = []
+for membership in range(MEMBERSHIP_COUNT):
+    memberships.append(
+        Membership(
+            random.randrange(1, len(users)),
+            random.randrange(1, len(organizations))
+        )
+    )
+
 
 # Write all insertion commands, as well as a header and footer, to an SQL script.
 with open(OUTPUT_PATH, "w") as f:
@@ -183,4 +289,12 @@ with open(OUTPUT_PATH, "w") as f:
         f.write(str(user))
     for organization in organizations:
         f.write(str(organization))
+    for event in events:
+        f.write(str(event))
+    for picture in pictures:
+        f.write(str(picture))
+    for comment in comments:
+        f.write(str(comment))
+    for membership in memberships:
+        f.write(str(membership))
     f.write(FOOTER)
