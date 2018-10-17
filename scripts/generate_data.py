@@ -9,17 +9,10 @@ import string
 from faker import Faker
 
 # Various constants and global objects.
-HEADER = (
-    "/*\n"
-    "Part of Zajedno.\n"
-    "Written by Tiger Sachse.\n"
-    "*/\n\n"
-    "USE main_database;\n"
-    "CONNECT main_database;\n\n"
-)
+ORG_COUNT = 75
 FOOTER = "\nQUIT"
-USER_COUNT = 10
-UNIVERSITY_COUNT = 10
+USER_COUNT = 1000
+UNIVERSITY_COUNT = 50
 ENGLISH_FAKER = Faker()
 LOREM_FAKER = Faker("lt_LT")
 OUTPUT_PATH = "add_sample_data.sql"
@@ -39,6 +32,14 @@ INSTITUTION_FORMATS = (
     "{0} State University",
     "{0} State College",
     "{0} Community College",
+)
+HEADER = (
+    "/*\n"
+    "Part of Zajedno.\n"
+    "Written by Tiger Sachse.\n"
+    "*/\n\n"
+    "USE main_database;\n"
+    "CONNECT main_database;\n\n"
 )
 
 class User:
@@ -63,7 +64,7 @@ class User:
         """Generate a random email using this user's name."""
         email = []
 
-        email.extend(self.first_name)
+        email.append(self.first_name)
         email.append(".")
         email.append(self.last_name)
         email.extend(random.choices(string.digits, k=2))
@@ -149,10 +150,29 @@ class University:
         )
 
 
+class Organization:
+    """Class that holds randomized data for an organization entry in the database."""
+    INSERT = "INSERT INTO organizations (name, owner_id) VALUES ('{0}', {1});\n"
+
+    def __init__(self, owner_id):
+        """Initialize this organization with a name and owner ID."""
+        self.name = ENGLISH_FAKER.company()
+        self.owner_id = owner_id
+
+
+    def __str__(self):
+        """Return the SQL insertion command for this organization."""
+        return self.INSERT.format(
+            self.name,
+            self.owner_id,
+        )
+
+
 # Main entry point to script.
 # Generate random users and universities.
 universities = [University() for count in range(UNIVERSITY_COUNT)]
 users = [User(random.randrange(1, len(universities))) for count in range(USER_COUNT)]
+organizations = [Organization(random.randrange(1, len(users))) for count in range(ORG_COUNT)]
 
 # Write all insertion commands, as well as a header and footer, to an SQL script.
 with open(OUTPUT_PATH, "w") as f:
@@ -161,4 +181,6 @@ with open(OUTPUT_PATH, "w") as f:
         f.write(str(university))
     for user in users:
         f.write(str(user))
+    for organization in organizations:
+        f.write(str(organization))
     f.write(FOOTER)
