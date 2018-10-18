@@ -31,7 +31,7 @@
                 <a class="nav-link" href="dashboard.html">Dashboard <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="events.html">Events</a>
+                <a class="nav-link" href="events.php">Events</a>
             </li>
         </ul>
     </div>

@@ -43,17 +43,57 @@
     </form>
 </nav>
 
+<script type='text/javascript'>
+ 
+     $(document).ready(function(){
+     $('#addEventModal').on('click', '.btn-primary', function(e){
+     var eventName = $('#inputEventName').val();
+     var state = $('#inputState').val();
+     var publicity = $('#inputPublicity').val();
+     var description = $('#inputEventDescription').val();
+     var time = $('#inputEventTime').val();
+     var date = $('#inputEventDate').val();
+     var location = $('#inputLocation').val();
+     var phone = $('#inputContactPhone').val();
+     var email = $('#inputContactEmail').val();
+     var RSO = $('#inputRSO').val();
+     
+            $.post("events.php", 
+               { 
+                  inputEventName:eventName,
+                  inputState:state,
+                  inputPublicity:publicity,
+                  inputEventDescription:description,
+                  inputEventTime:time,
+                  inputEventDate:date,
+                  inputLocation:location,
+                  inputContactPhone:phone,
+                  inputContactEmail:email,
+                  inputRSO:RSO,
+               },
+            function(response,status){ 
+             $("#events").html(response);
+             
+          });
+           
+     $('#addEventModal').modal('hide');
+   });
+   });
+         
+  </script>
+
+
 <!-- Events Form -->
-<form>
+<form action="events.php " method="post">
     <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline">
                     <div class="form-row">
                         <div class="form-group col-6">
-                            <button type="button" class="btn btn-success" data-toggle="modal"
-                                    data-target="#addEventModal">Add Event
-                            </button>
+                            <a href="newEvent.php">
+                                <button type="button" class="btn btn-success">Add Event</button>
+                            </a>
                             <button type="button" class="btn btn-danger disabled" id="removeEventButton">Remove Event
                             </button>
                         </div>
@@ -64,77 +104,8 @@
                 </form>
             </div>
 
-            <!-- Add Event Modal -->
-            <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="newEventLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newEventLabel">Event Window</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="formAddEvent">
-                                <div class="form-group">
-                                    <label for="inputEventName">Name</label>
-                                    <input type="text" class="form-control" id="inputEventName"
-                                           placeholder="Art Exhibit" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputState">Event Category</label>
-                                    <select id="inputState" class="form-control">
-                                        <option selected value=""></option>
-                                        <option value="edu">Educational</option>
-                                        <option value="fun">Fun</option>
-                                        <option value="rel">Religious</option>
-                                        <option value="vol">Volunteer</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputEventDescription">Description</label>
-                                    <input type="text" class="form-control" id="inputEventDescription"
-                                           placeholder="This art exhibit...">
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputEventTime">Time</label>
-                                    <input type="text" class="form-control" id="inputEventTime" placeholder="1400">
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputEventDate">Date (mm/dd/yyyy)</label>
-                                    <input type="text" class="form-control" id="inputEventDate"
-                                           placeholder="12/25/2018">
-                                </div>
-                                <div class="form-group">
-                                    <label>Location</label>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label for="inputContactPhone">Contact Phone</label>
-                                        <input type="text" class="form-control" id="inputContactPhone"
-                                               placeholder="123 456 7890">
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label for="inputContactEmail">Contact Email</label>
-                                        <input type="text" class="form-control" id="inputContactEmail"
-                                               placeholder="john@web.com">
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close Window</button>
-                            <button type="button" class="btn btn-primary" id="addEventButton" disabled=true>Save
-                                Changes
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered" style="white-space: nowrap">
+                <table id="dataTable" class="table table-bordered table-hover" style="white-space: nowrap">
                     <thead>
                     <tr>
                         <th scope="col">Name</th>
@@ -145,13 +116,70 @@
                         <th scope="col">Location</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Select</th> <!-- This is for the check box -->
+                       <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
 
                     <tbody id="tableEvents">
-                    <!-- Table generated here -->
-                    </tbody>
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        //session_start();
+    }
+
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
+
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
+
+    //$all = 0;
+    //$Students =1;
+    //$rso = 2;
+    //$id = 3;
+    //$_SESSION['id'];
+
+    $sql="SELECT * FROM `events` E";
+
+
+    /*where E.publicity_level = '$all'
+            JOIN
+            SELECT * FROM `events` E, `users` U, `memberships` M  where E.publicity_level='$Students'
+            AND E.university_id = U.university_id AND U.id = '$id')
+            JOIN
+            SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)
+        */
+
+    $result= $conn->query($sql);
+
+    foreach ($result as $row){
+
+       // $university = "SELECT name FROM universities U where U.id = '$row[university_id]' ";
+       // $result2 = $conn->query($university);
+
+        echo "<tr>
+                <td>$row[name]</td>
+                <td>$row[category]</td>
+                <td>$row[description]</td>
+                <td>$row[event_time]</td>
+                <td>$row[event_date]</td>
+                <td>$row[address]</td>
+                <td>$row[contact_number]</td>
+                <td>$row[contact_email]</td>
+            </tr>"; 
+        }
+?>
+                            
+                </tbody>
                 </table>
             </div>
         </div>
