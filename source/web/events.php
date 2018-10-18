@@ -97,9 +97,9 @@
                                     <label for="inputPublicity">Event Publicity</label>
                                     <select id="inputPublicity" class="form-control">
                                         <option selected value=""></option>
-                                        <option value="All">Open For All</option>
-                                        <option value="Students">University Students Only</option>
-                                        <option value="Members">RSO Members Only</option>
+                                        <option value="0">Open For All</option>
+                                        <option value="1">University Students Only</option>
+                                        <option value="2">RSO Members Only</option>
                                     </select>
                                 </div>
 
@@ -226,28 +226,41 @@
         die();
     }
 
+    $all = 0;
+    $Students =1;
+    $rso = 2;
     $id = 3;
     //$_SESSION['id'];
 
-    $sql="SELECT * FROM events E, users U, memberships M where (E.publicity_level='All') 
-            UNION 
-            SELECT * FROM events E, users U, memberships M where(E.publicity_level='Students' AND E.university_id = U.university_id AND U.id = '$id')
-            UNION
-            SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)";
+    $sql="SELECT * FROM `events` E  where E.publicity_level = '$all'
+            JOIN
+            SELECT * FROM `events` E, where E.publicity_level='$Students'";
+
+
+
+            /* `users` U, `memberships` M 
+
+            AND E.university_id = U.university_id AND U.id = '$id')
+            JOIN
+            SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)
+        ";*/
 
     $result= $conn->query($sql);
 
     foreach ($result as $row){
 
+       // $university = "SELECT name FROM universities U where U.id = '$row[university_id]' ";
+       // $result2 = $conn->query($university);
+
         echo "<tr>
-                <td>Jill</td>
-                <td>Smith</td>
-                <td>50</td>
-                <td>Jill</td>
-                <td>Smith</td>
-                <td>50</td>
-                <td>Jill</td>
-                <td>Smith</td>
+                <td>$row[name]</td>
+                <td>$row[category]</td>
+                <td>$row[description]</td>
+                <td>$row[event_time]</td>
+                <td>$row[event_date]</td>
+                <td>$row[address]</td>
+                <td>$row[contact_number]</td>
+                <td>$row[contact_email]</td>
             </tr>"; 
         }
 ?>
