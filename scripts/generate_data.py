@@ -20,7 +20,6 @@ ENGLISH_FAKER = Faker()
 MEMBERSHIP_COUNT = 20000
 LOREM_FAKER = Faker("lt_LT")
 OUTPUT_PATH = "add_sample_data.sql"
-PRIVILEGE_LEVELS = ("normal", "admin", "superadmin")
 PICTURE_EXTENSIONS = (".jpg", ".png", ".bmp", ".gif", ".jpeg")
 ROAD_TYPES = ("Boulevard", "Lane", "Court", "Road", "Way", "Street")
 EMAIL_DOMAINS = (
@@ -52,7 +51,7 @@ class User:
     INSERT = (
         "INSERT INTO users "
         "(first_name, last_name, password, email, university_id, permission_level) "
-        "VALUES ('{0}', '{1}', '{2}', '{3}', {4}, '{5}');\n"
+        "VALUES ('{0}', '{1}', '{2}', '{3}', {4}, {5});\n"
     )
 
     def __init__(self, university_id):
@@ -62,7 +61,7 @@ class User:
         self.university_id = university_id
         self.email = self.__generate_email()
         self.password = self.__generate_password()
-        self.permission_level = random.choice(PRIVILEGE_LEVELS)
+        self.permission_level = random.randrange(0, 3)
 
 
     def __generate_email(self):
@@ -159,11 +158,16 @@ class University:
 
 class Organization:
     """Class that holds randomized data for an organization entry in the database."""
-    INSERT = "INSERT INTO organizations (name, owner_id) VALUES ('{0}', {1});\n"
+    INSERT = (
+        "INSERT INTO organizations "
+        "(name, university_id, owner_id) "
+        "VALUES ('{0}', {1}, {2});\n"
+    )
 
-    def __init__(self, owner_id):
+    def __init__(self, university_id, owner_id):
         """Initialize this organization with a name and owner ID."""
         self.name = ENGLISH_FAKER.company()
+        self.university_id = university_id
         self.owner_id = owner_id
 
 
@@ -171,6 +175,7 @@ class Organization:
         """Return the SQL insertion command for this organization."""
         return self.INSERT.format(
             self.name,
+            self.university_id,
             self.owner_id,
         )
 
@@ -180,12 +185,12 @@ class Event:
     INSERT = (
         "INSERT INTO events "
         "(name, description, category, address, publicity_level, organization_id,"
-        " event_time, event_data, contact_number, contact_email, ratings_count,"
-        " ratings_average) VALUES "
-        "('{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, {7}, {8}, '{9}', {10}, {11});\n"
+        " university_id, event_time, event_data, contact_number, contact_email,"
+        " ratings_count, ratings_average) VALUES "
+        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, {8}, {9}, '{10}', {11}, {12});\n"
     )
 
-    def __init__(self, organization_id):
+    def __init__(self, university_id, organization_id):
         """"""
         pass
 
@@ -264,14 +269,23 @@ class Membership:
 # Generate random users and universities. ###
 universities = [University() for university in range(UNIVERSITY_COUNT)]
 users = [User(random.randrange(1, len(universities))) for user in range(USER_COUNT)]
+
 organizations = []
 for organization in range(ORGANIZATION_COUNT):
-    organizations.append(Organization(random.randrange(1, len(users))))
-events = [Event(1) for event in range(EVENT_COUNT)]
+    organizations.append(
+        Organization(
+            random.randrange(1, len(universities)),
+            random.randrange(1, len(users))
+        )
+    )
+
+events = [Event(1, 1) for event in range(EVENT_COUNT)]
 pictures = [Picture(random.randrange(1, len(events))) for count in range(PICTURE_COUNT)]
+
 comments = []
 for comment in range(COMMENT_COUNT):
     comments.append(Comment(random.randrange(1, len(events)), random.randrange(1, len(users))))
+
 memberships = []
 for membership in range(MEMBERSHIP_COUNT):
     memberships.append(
@@ -280,7 +294,6 @@ for membership in range(MEMBERSHIP_COUNT):
             random.randrange(1, len(organizations))
         )
     )
-
 
 # Write all insertion commands, as well as a header and footer, to an SQL script.
 with open(OUTPUT_PATH, "w") as f:
