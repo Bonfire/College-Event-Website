@@ -229,7 +229,12 @@
     $id = 3;
     //$_SESSION['id'];
 
-    $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
+    $sql="SELECT * FROM events E, users U, memberships M where (E.publicity_level='All') 
+            UNION 
+            SELECT * FROM events E, users U, memberships M where(E.publicity_level='Students' AND E.university_id = U.university_id AND U.id = '$id')
+            UNION
+            SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)";
+
     $result= $conn->query($sql);
 
     foreach ($result as $row){
