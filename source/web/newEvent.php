@@ -117,6 +117,7 @@ if (!empty($eventName) && !empty($RSO))
     if ($query = $conn->prepare('
         INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email) 
         VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_time, :event_date, :contact_number, :contact_email)')) {
+        
         if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $time, ':event_date' => $date, ':contact_number' => $phone, ':contact_email' => $email ))) {
             echo $eventCreationSuccessAlert;
 
@@ -196,12 +197,19 @@ if (!empty($eventName) && !empty($RSO))
     //$_SESSION['id'];
 
     $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
-    $result= $conn->query($sql);
 
-    foreach ($result as $row){
+    if($query= $conn->prepare($sql)){
+        $query->execute();
 
-        echo "<option value=\"$row[id]\">$row[name]</option>"; 
+        foreach ($query as $row){
+
+            if($row)
+            {
+
+            echo "<option value=\"$row[id]\">$row[name]</option>"; 
+            }
         }
+    }
 ?>
                         </select>
                     </div>

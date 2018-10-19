@@ -43,46 +43,6 @@
     </form>
 </nav>
 
-<script type='text/javascript'>
- 
-     $(document).ready(function(){
-     $('#addEventModal').on('click', '.btn-primary', function(e){
-     var eventName = $('#inputEventName').val();
-     var state = $('#inputState').val();
-     var publicity = $('#inputPublicity').val();
-     var description = $('#inputEventDescription').val();
-     var time = $('#inputEventTime').val();
-     var date = $('#inputEventDate').val();
-     var location = $('#inputLocation').val();
-     var phone = $('#inputContactPhone').val();
-     var email = $('#inputContactEmail').val();
-     var RSO = $('#inputRSO').val();
-     
-            $.post("events.php", 
-               { 
-                  inputEventName:eventName,
-                  inputState:state,
-                  inputPublicity:publicity,
-                  inputEventDescription:description,
-                  inputEventTime:time,
-                  inputEventDate:date,
-                  inputLocation:location,
-                  inputContactPhone:phone,
-                  inputContactEmail:email,
-                  inputRSO:RSO,
-               },
-            function(response,status){ 
-             $("#events").html(response);
-             
-          });
-           
-     $('#addEventModal').modal('hide');
-   });
-   });
-         
-  </script>
-
-
 <!-- Events Form -->
 <form action="events.php " method="post">
     <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
@@ -159,24 +119,30 @@
             SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)
         */
 
-    $result= $conn->query($sql);
+    if($query= $conn->prepare($sql)){
+      $query->execute();
 
-    foreach ($result as $row){
+        foreach ($query as $row){
 
-       // $university = "SELECT name FROM universities U where U.id = '$row[university_id]' ";
-       // $result2 = $conn->query($university);
+            if($row)
+            {
 
-        echo "<tr>
-                <td>$row[name]</td>
-                <td>$row[category]</td>
-                <td>$row[description]</td>
-                <td>$row[event_time]</td>
-                <td>$row[event_date]</td>
-                <td>$row[address]</td>
-                <td>$row[contact_number]</td>
-                <td>$row[contact_email]</td>
-            </tr>"; 
+             // $university = "SELECT name FROM universities U where U.id = '$row[university_id]' ";
+             // $result2 = $conn->query($university);
+
+              echo "<tr>
+                      <td>$row[name]</td>
+                      <td>$row[category]</td>
+                      <td>$row[description]</td>
+                      <td>$row[event_time]</td>
+                      <td>$row[event_date]</td>
+                      <td>$row[address]</td>
+                      <td>$row[contact_number]</td>
+                      <td>$row[contact_email]</td>
+                  </tr>"; 
+            }
         }
+    }
 ?>
                             
                 </tbody>
