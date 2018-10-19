@@ -55,7 +55,53 @@
                     <span id="accountEmail" class="text-light"></span>
                 </div>
                 <div class="form-group">
-                    <label for="accountType" class="text-light">Account Type: </label>
+                    <label for="accountType" class="text-light">Account Type: Basic</label>
+                    <span id="accountType" class="text-light"></span>
+                </div>
+                <div class="form-group">
+                    <label for="accountUni" class="text-light">University: </label>
+                    <span id="accountUni" class="text-light"></span>
+                </div>
+                <hr class="bg-light">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container-fluid">
+    <form id="accountCard">
+        <div class="row">
+            <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">
+                <span class="mx-auto text-light"><h4>Welcome, <span id="username"></span></h4></span>
+                <hr class="bg-light">
+                <div class="form-group">
+                    <label for="accountEmail" class="text-light">Account Email: </label>
+                    <span id="accountEmail" class="text-light"></span>
+                </div>
+                <div class="form-group">
+                    <label for="accountType" class="text-light">Account Type: Admin</label>
+                    <span id="accountType" class="text-light"></span>
+                </div>
+                <div class="form-group">
+                    <label for="accountUni" class="text-light">University: </label>
+                    <span id="accountUni" class="text-light"></span>
+                </div>
+                <hr class="bg-light">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container-fluid">
+    <form id="accountCard">
+        <div class="row">
+            <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">
+                <span class="mx-auto text-light"><h4>Welcome, <span id="username"></span></h4></span>
+                <hr class="bg-light">
+                <div class="form-group">
+                    <label for="accountEmail" class="text-light">Account Email: </label>
+                    <span id="accountEmail" class="text-light"></span>
+                </div>
+                <div class="form-group">
+                    <label for="accountType" class="text-light">Account Type: Super Admin</label>
                     <span id="accountType" class="text-light"></span>
                 </div>
                 <div class="form-group">
