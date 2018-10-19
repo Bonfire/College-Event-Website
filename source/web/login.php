@@ -15,7 +15,7 @@
             crossorigin="anonymous"></script>
 
 </head>
-<body>
+<body style="background: url('background.png')">
 <!-- Navbar -->
 <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand">
