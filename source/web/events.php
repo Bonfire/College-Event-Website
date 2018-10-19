@@ -14,7 +14,7 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
 </head>
-<body>
+<body style="background: url('background.png')">
 <!-- Navbar -->
 <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
     <a class="navbar-brand">
@@ -44,7 +44,7 @@
 </nav>
 
 <script type='text/javascript'>
- 
+
      $(document).ready(function(){
      $('#addEventModal').on('click', '.btn-primary', function(e){
      var eventName = $('#inputEventName').val();
@@ -57,9 +57,9 @@
      var phone = $('#inputContactPhone').val();
      var email = $('#inputContactEmail').val();
      var RSO = $('#inputRSO').val();
-     
-            $.post("events.php", 
-               { 
+
+            $.post("events.php",
+               {
                   inputEventName:eventName,
                   inputState:state,
                   inputPublicity:publicity,
@@ -71,15 +71,15 @@
                   inputContactEmail:email,
                   inputRSO:RSO,
                },
-            function(response,status){ 
+            function(response,status){
              $("#events").html(response);
-             
+
           });
-           
+
      $('#addEventModal').modal('hide');
    });
    });
-         
+
   </script>
 
 
@@ -175,10 +175,10 @@
                 <td>$row[address]</td>
                 <td>$row[contact_number]</td>
                 <td>$row[contact_email]</td>
-            </tr>"; 
+            </tr>";
         }
 ?>
-                            
+
                 </tbody>
                 </table>
             </div>
