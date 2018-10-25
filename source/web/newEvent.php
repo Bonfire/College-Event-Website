@@ -131,7 +131,6 @@ if (!empty($eventName) && !empty($RSO))
             echo $errorConnectingAlert;
         }
     }
-
 }
 ?>
 <div class="container-fluid">
@@ -151,10 +150,10 @@ if (!empty($eventName) && !empty($RSO))
                         <label for="inputState">Event Category</label>
                         <select id="inputState" class="form-control" name="inputState">
                             <option selected value=""></option>
-                            <option value="edu">Educational</option>
-                            <option value="fun">Fun</option>
-                            <option value="rel">Religious</option>
-                            <option value="vol">Volunteer</option>
+                            <option value="Educational">Educational</option>
+                            <option value="Fun">Fun</option>
+                            <option value="Religious">Religious</option>
+                            <option value="Volunteer">Volunteer</option>
                         </select>
                     </div>
 

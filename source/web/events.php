@@ -76,6 +76,9 @@
                         <th scope="col">Location</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
+                        <th scope="col">University</th>
+                        <th scope="col">RSO</th>
+                        <th scope="col">Publicity</th>
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
@@ -119,27 +122,57 @@
             SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)
         */
 
-    if($query= $conn->prepare($sql)){
+    if($query= $conn->prepare($sql))
+    {
       $query->execute();
 
-        foreach ($query as $row){
+        foreach ($query as $row)
+        {
 
             if($row)
             {
 
-             // $university = "SELECT name FROM universities U where U.id = '$row[university_id]' ";
-             // $result2 = $conn->query($university);
+                $RSO = "SELECT name FROM organizations where organizations.id = '$row[organization_id]' LIMIT 0,1";
+                $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
 
-              echo "<tr>
-                      <td>$row[name]</td>
-                      <td>$row[category]</td>
-                      <td>$row[description]</td>
-                      <td>$row[event_time]</td>
-                      <td>$row[event_date]</td>
-                      <td>$row[address]</td>
-                      <td>$row[contact_number]</td>
-                      <td>$row[contact_email]</td>
-                  </tr>"; 
+                if($query2 = $conn->prepare($RSO))
+                {
+                    $query2->execute();
+                    $RSO = $query2->fetch(PDO::FETCH_ASSOC);
+                }
+
+                if($query2 = $conn->prepare($University))
+                {
+                    $query2->execute();
+                    $University = $query2->fetch(PDO::FETCH_ASSOC);
+                }
+                
+                $pub = "publicity_level";
+
+                if(($row[$pub]) == 0){
+                    $level = "Open For All";
+                }
+                else if(($row[$pub]) == 1){
+                    $level = "University Students Only";
+                }
+                else{
+                    $level = "RSO Members Only";
+                }
+                
+
+                  echo "<tr>
+                          <td>$row[name]</td>
+                          <td>$row[category]</td>
+                          <td>$row[description]</td>
+                          <td>$row[event_time]</td>
+                          <td>$row[event_date]</td>
+                          <td>$row[address]</td>
+                          <td>$row[contact_number]</td>
+                          <td>$row[contact_email]</td>
+                          <td>$University[name]</td>
+                          <td>$RSO[name]</td>
+                          <td>$level</td>
+                      </tr>"; 
             }
         }
     }
