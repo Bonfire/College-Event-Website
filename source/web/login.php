@@ -93,14 +93,15 @@ if (isset($_POST) && isset($_POST['inputEmail']) && isset($_POST['inputPassword'
 }
 
 if (!empty($email) && !empty($password)) {
-    if ($query = $conn->prepare('SELECT id, email, permission_level  FROM users WHERE email = :email AND password = :password')) {
+    if ($query = $conn->prepare('SELECT *  FROM users WHERE email = :email AND password = :password')) {
         $query->execute(array(':email' => $email, ':password' => $password));
 
         // See if the user with these credentials exists
-        if ($row = $query->fetch()) {
+        if ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $_SESSION['id'] = $row['id'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['perm'] = $row['permission_level'];
+            $_SESSION['univ'] = $row['university_id'];
 
             echo $successfulLoginAlert;
             ob_end_flush();

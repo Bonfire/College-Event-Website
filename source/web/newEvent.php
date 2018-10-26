@@ -99,8 +99,7 @@ if (isset($_POST)
     $RSO = $_POST['inputRSO'];
 }
 
-$id = 2;
-    //$_SESSION['id'];
+$id = $_SESSION['id'];
 
 if (!empty($eventName) && !empty($RSO))
 
@@ -112,12 +111,15 @@ if (!empty($eventName) && !empty($RSO))
     //$sql="SELECT university_id FROM `users` WHERE university_id = '$id'";
     //$result= $conn->query($sql);
     //$value = mysql_fetch_object($result);
+    
+    $date = DateTime::createFromFormat('Y-m-d', $date);
 
 
     if ($query = $conn->prepare('
         INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email)
         VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_time, :event_date, :contact_number, :contact_email)')) {
-        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $time, ':event_date' => $date, ':contact_number' => $phone, ':contact_email' => $email ))) {
+        
+        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $time, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email ))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();
@@ -130,7 +132,6 @@ if (!empty($eventName) && !empty($RSO))
             echo $errorConnectingAlert;
         }
     }
-
 }
 ?>
 <div class="container-fluid">
@@ -150,10 +151,10 @@ if (!empty($eventName) && !empty($RSO))
                         <label for="inputState">Event Category</label>
                         <select id="inputState" class="form-control" name="inputState">
                             <option selected value=""></option>
-                            <option value="edu">Educational</option>
-                            <option value="fun">Fun</option>
-                            <option value="rel">Religious</option>
-                            <option value="vol">Volunteer</option>
+                            <option value="Educational">Educational</option>
+                            <option value="Fun">Fun</option>
+                            <option value="Religious">Religious</option>
+                            <option value="Volunteer">Volunteer</option>
                         </select>
                     </div>
 
@@ -192,16 +193,23 @@ if (!empty($eventName) && !empty($RSO))
         die();
     }
 
-    $id = 2;
-    //$_SESSION['id'];
+    $id = $_SESSION['id'];
 
     $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
-    $result= $conn->query($sql);
 
-    foreach ($result as $row){
+    if($query= $conn->prepare($sql)){
+        $query->execute();
 
-        echo "<option value=\"$row[id]\">$row[name]</option>";
+        foreach ($query as $row){
+
+            if($row)
+            {
+
+            echo "<option value=\"$row[id]\">$row[name]</option>"; 
+            }
+
         }
+    }
 ?>
                         </select>
                     </div>
@@ -216,7 +224,7 @@ if (!empty($eventName) && !empty($RSO))
                     </div>
                     <div class="form-group">
                         <label for="inputEventDate">Date (mm/dd/yyyy)</label>
-                        <input type="text" class="form-control" id="inputEventDate"
+                        <input type="date" class="form-control" id="inputEventDate"
                                placeholder="12/25/2018" name="inputEventDate">
                     </div>
                     <div class="form-group">
@@ -227,11 +235,11 @@ if (!empty($eventName) && !empty($RSO))
                     <div class="form-row">
                         <div class="form-group col-6">
                             <label for="inputContactPhone">Contact Phone</label>
-                            <input type="text" class="form-control" id="inputContactPhone" name="inputContactPhone" placeholder="123 456 7890">
+                            <input type="text" class="form-control" id="inputContactPhone" name="inputContactPhone" placeholder="1234567890">
                         </div>
                         <div class="form-group col-6">
                             <label for="inputContactEmail">Contact Email</label>
-                            <input type="text" class="form-control" id="inputContactEmail" name="inputContactEmail" placeholder="john@web.com">
+                            <input type="email" class="form-control" id="inputContactEmail" name="inputContactEmail" placeholder="john@web.com">
                         </div>
                     </div>
                 </form>

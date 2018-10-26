@@ -48,67 +48,77 @@
     <form id="accountCard">
         <div class="row">
             <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">
-                <span class="mx-auto text-light"><h4>Welcome, <span id="username"></span></h4></span>
-                <hr class="bg-light">
-                <div class="form-group">
-                    <label for="accountEmail" class="text-light">Account Email: </label>
-                    <span id="accountEmail" class="text-light"></span>
+                
+ <?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
+
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
+
+    $sql = "SELECT * FROM `users` where users.id = '$_SESSION[id]'";
+    $University = "SELECT name FROM universities where universities.id = '$_SESSION[univ]'";
+
+    if($query = $conn->prepare($sql))
+    {
+        $query->execute();
+        $entry = $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    if($query2 = $conn->prepare($University))
+    {
+        $query2->execute();
+        $University = $query2->fetch(PDO::FETCH_ASSOC);
+    }
+
+    if($entry){
+
+        if(($_SESSION['perm']) == 0){
+                    $level = "General User";
+                }
+                else if($_SESSION['perm'] == 1){
+                    $level = "Admin";
+                }
+                else{
+                    $level = "Super Admin";
+                }
+
+        echo "
+            <span class=\"mx-auto text-light\"><h4>Welcome, $entry[first_name] $entry[last_name]<span id=\"username\"></span></h4></span>
+            <hr class=\"bg-light\">
+                <div class=\"form-group\">
+                    <label for=\"accountEmail\" class=\"text-light\">Account Email: </label>
+                    <label for=\"accountEmail\" class=\"text-light\">$entry[email]</label>
+                    <span id=\"accountEmail\" class=\"text-light\"></span>
                 </div>
-                <div class="form-group">
-                    <label for="accountType" class="text-light">Account Type: Basic</label>
-                    <span id="accountType" class="text-light"></span>
+                <div class=\"form-group\">
+                    <label for=\"accountType\" class=\"text-light\">Account Type: </label>
+                    <label for=\"accountType\" class=\"text-light\">$level</label>
+                    <span id=\"accountType\" class=\"text-light\"></span>
                 </div>
-                <div class="form-group">
-                    <label for="accountUni" class="text-light">University: </label>
-                    <span id="accountUni" class="text-light"></span>
+                <div class=\"form-group\">
+                    <label for=\"accountUni\" class=\"text-light\">University: </label>
+                    <label for=\"accountUni\" class=\"text-light\">$University[name]</label>
+                    <span id=\"accountUni\" class=\"text-light\"></span>
                 </div>
-                <hr class="bg-light">
-            </div>
-        </div>
-    </form>
-</div>
-<div class="container-fluid">
-    <form id="accountCard">
-        <div class="row">
-            <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">
-                <span class="mx-auto text-light"><h4>Welcome, <span id="username"></span></h4></span>
-                <hr class="bg-light">
-                <div class="form-group">
-                    <label for="accountEmail" class="text-light">Account Email: </label>
-                    <span id="accountEmail" class="text-light"></span>
-                </div>
-                <div class="form-group">
-                    <label for="accountType" class="text-light">Account Type: Admin</label>
-                    <span id="accountType" class="text-light"></span>
-                </div>
-                <div class="form-group">
-                    <label for="accountUni" class="text-light">University: </label>
-                    <span id="accountUni" class="text-light"></span>
-                </div>
-                <hr class="bg-light">
-            </div>
-        </div>
-    </form>
-</div>
-<div class="container-fluid">
-    <form id="accountCard">
-        <div class="row">
-            <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">
-                <span class="mx-auto text-light"><h4>Welcome, <span id="username"></span></h4></span>
-                <hr class="bg-light">
-                <div class="form-group">
-                    <label for="accountEmail" class="text-light">Account Email: </label>
-                    <span id="accountEmail" class="text-light"></span>
-                </div>
-                <div class="form-group">
-                    <label for="accountType" class="text-light">Account Type: Super Admin</label>
-                    <span id="accountType" class="text-light"></span>
-                </div>
-                <div class="form-group">
-                    <label for="accountUni" class="text-light">University: </label>
-                    <span id="accountUni" class="text-light"></span>
-                </div>
-                <hr class="bg-light">
+            <hr class=\"bg-light\">";
+    }
+
+?> 
             </div>
         </div>
     </form>
