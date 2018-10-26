@@ -14,7 +14,7 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
 </head>
-<body>
+<body style="background: url('background.png')">
 <!-- Navbar -->
 <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
     <a class="navbar-brand">
@@ -104,19 +104,19 @@ $id = $_SESSION['id'];
 if (!empty($eventName) && !empty($RSO))
 
     /*&& !empty($state) && !empty($publicity) && !empty($description) &&
-    !empty($time) && !empty($date) && !empty($location) && !empty($phone) && !empty($email)) 
+    !empty($time) && !empty($date) && !empty($location) && !empty($phone) && !empty($email))
     */
     {
 
     //$sql="SELECT university_id FROM `users` WHERE university_id = '$id'";
     //$result= $conn->query($sql);
     //$value = mysql_fetch_object($result);
-
     
     $date = DateTime::createFromFormat('Y-m-d', $date);
 
+
     if ($query = $conn->prepare('
-        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email) 
+        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email)
         VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_time, :event_date, :contact_number, :contact_email)')) {
         
         if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $time, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email ))) {
@@ -127,7 +127,7 @@ if (!empty($eventName) && !empty($RSO))
             sleep(3);
 
             echo "<script type=\"text/javascript\">window.location.href='events.php';</script>";
-        } 
+        }
         else {
             echo $errorConnectingAlert;
         }
@@ -140,10 +140,10 @@ if (!empty($eventName) && !empty($RSO))
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
-                    
+
                     <div class="form-group">
                         <label for="inputEventName">Name</label>
-                        <input type="text" class="form-control" name="inputEventName" id="inputEventName" required="" 
+                        <input type="text" class="form-control" name="inputEventName" id="inputEventName" required=""
                                 placeholder="Art Exhibit" >
                     </div>
 
@@ -207,6 +207,7 @@ if (!empty($eventName) && !empty($RSO))
 
             echo "<option value=\"$row[id]\">$row[name]</option>"; 
             }
+
         }
     }
 ?>
@@ -255,6 +256,6 @@ if (!empty($eventName) && !empty($RSO))
     </div>
 </form>
 </div>
-  
+
 </body>
 </html>

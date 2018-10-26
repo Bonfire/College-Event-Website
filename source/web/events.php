@@ -14,7 +14,7 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
 </head>
-<body>
+<body style="background: url('background.png')">
 <!-- Navbar -->
 <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
     <a class="navbar-brand">
@@ -42,7 +42,6 @@
         </a>
     </form>
 </nav>
-
 <!-- Events Form -->
 <form action="events.php " method="post">
     <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
@@ -172,10 +171,11 @@
                           <td>$level</td>
                       </tr>"; 
             }
+
         }
     }
 ?>
-                            
+
                 </tbody>
                 </table>
             </div>

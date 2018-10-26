@@ -14,7 +14,7 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
 </head>
-<body>
+<body style="background: url('background.png')">
 <!-- Navbar -->
 <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand">
