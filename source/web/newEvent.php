@@ -100,8 +100,9 @@ if (isset($_POST)
 }
 
 $id = $_SESSION['id'];
+$univ = $_SESSION['univ'];
 
-if (!empty($eventName) && !empty($RSO))
+if (!empty($eventName) && !empty($RSO) && !empty($date))
 
     /*&& !empty($state) && !empty($publicity) && !empty($description) &&
     !empty($time) && !empty($date) && !empty($location) && !empty($phone) && !empty($email))
@@ -116,10 +117,10 @@ if (!empty($eventName) && !empty($RSO))
 
 
     if ($query = $conn->prepare('
-        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email)
-        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_time, :event_date, :contact_number, :contact_email)')) {
+        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email, university_id)
+        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_time, :event_date, :contact_number, :contact_email, :university_id)')) {
         
-        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $time, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email ))) {
+        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $time, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $univ  ))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();
@@ -225,7 +226,7 @@ if (!empty($eventName) && !empty($RSO))
                     <div class="form-group">
                         <label for="inputEventDate">Date (mm/dd/yyyy)</label>
                         <input type="date" class="form-control" id="inputEventDate"
-                               placeholder="12/25/2018" name="inputEventDate">
+                               placeholder="12/25/2018" name="inputEventDate" required="">
                     </div>
                     <div class="form-group">
                         <label for="inputLocation">Location</label>
