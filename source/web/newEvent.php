@@ -104,7 +104,7 @@ if (isset($_POST)
 $id = $_SESSION['id'];
 $univ = $_SESSION['univ'];
 
-if (!empty($eventName) && !empty($RSO) && !empty($date))
+if (!empty($eventName) && !empty($RSO))
 
     /*&& !empty($state) && !empty($publicity) && !empty($description) &&
     !empty($time) && !empty($date) && !empty($location) && !empty($phone) && !empty($email))
@@ -118,13 +118,28 @@ if (!empty($eventName) && !empty($RSO) && !empty($date))
     $date = $date. "-";
     $date = $date. $time;
     $timezone = new DateTimeZone( "UTC" );
-    $length = $length * 60;
+
+    if(!empty($length)){
+        $length = $length * 60; 
+    }
+   
 
     $date = DateTime::createFromFormat('Y-m-d-G:i', $date, $timezone);
 
+    $sql="SELECT * FROM users where users.id = '$id'";
+    if(empty($email)){
+        if($query = $conn->prepare($sql))
+        {
+            $query->execute();
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+            $email = $result['email'];
+        }  
+    }
+
     if ($query = $conn->prepare('
         INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email, university_id)
-        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_length, :event_date, :contact_number, :contact_email, :university_id)')) {
+        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_length, :event_date, :contact_number, :contact_email, :university_id)')) 
+    {  
         
         if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_length' => $length, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $univ  ))) {
             echo $eventCreationSuccessAlert;
@@ -200,9 +215,7 @@ if (!empty($eventName) && !empty($RSO) && !empty($date))
         die();
     }
 
-    $id = $_SESSION['id'];
-
-    $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
+    $sql="SELECT name,id FROM organizations where organizations.owner_id ='$_SESSION[id]'";
 
     if($query= $conn->prepare($sql)){
         $query->execute();
@@ -228,11 +241,11 @@ if (!empty($eventName) && !empty($RSO) && !empty($date))
                     <div class="form-row">
                         <div class="form-group col-6">
                             <label for="inputEventTime">Time</label>
-                            <input type="time" class="form-control" id="inputEventTime" placeholder="1400" name="inputEventTime">
+                            <input type="time" class="form-control" id="inputEventTime" placeholder="1400" name="inputEventTime" required="">
                         </div>
                         <div class="form-group col-6">
                             <label for="inputLength">Event Length (hours)</label>
-                            <input type="text" class="form-control" id="inputLength" placeholder="1.5" name="inputLength">
+                            <input type="text" class="form-control" id="inputLength" placeholder="1.5" name="inputLength" required="">
                         </div>
                     </div>
                     <div class="form-group">

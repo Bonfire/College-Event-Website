@@ -164,7 +164,7 @@
                           <td>$row[category]</td>
                           <td>$row[description]</td>
                           <td>$date</td>
-                          <td>$length</td>
+                          <td>$length hours</td>
                           <td>$row[address]</td>
                           <td>$row[contact_number]</td>
                           <td>$row[contact_email]</td>
