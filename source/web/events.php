@@ -105,12 +105,6 @@
         die();
     }
 
-    //$all = 0;
-    //$Students =1;
-    //$rso = 2;
-    //$id = 3;
-    //$_SESSION['id'];
-
     $sql="SELECT * FROM `events` E";
 
 

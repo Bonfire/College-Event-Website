@@ -99,8 +99,7 @@ if (isset($_POST)
     $RSO = $_POST['inputRSO'];
 }
 
-$id = 2;
-    //$_SESSION['id'];
+$id = $_SESSION['id'];
 
 if (!empty($eventName) && !empty($RSO))
 
@@ -192,8 +191,7 @@ if (!empty($eventName) && !empty($RSO))
         die();
     }
 
-    $id = 2;
-    //$_SESSION['id'];
+    $id = $_SESSION['id'];
 
     $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
 
