@@ -255,7 +255,79 @@ if (!empty($eventName) && !empty($RSO))
                     </div>
                     <div class="form-group">
                         <label for="inputLocation">Location</label>
-                        <input type="text" class="form-control" id="inputLocation" name="inputLocation" placeholder="Address">
+                         <div id="Map" style="height:300px"></div>
+
+<script src="OpenLayers.js"></script>
+<script>
+    var map,vectorLayer,selectMarkerControl,selectedFeature;
+    var lat =   28.601966;
+    var lon =    -81.200108;
+    var zoom=   15;
+    var curpos = new Array();
+    var position;
+
+    var fromProjection = new OpenLayers.Projection("EPSG:4326");
+    var toProjection   = new OpenLayers.Projection("EPSG:900913");
+    var cntrposition       = new OpenLayers.LonLat(lon, lat)
+    .transform( fromProjection, toProjection);
+
+    map = new OpenLayers.Map("Map",
+        {
+            controls: 
+            [
+            new OpenLayers.Control.PanZoomBar(),                        
+            new OpenLayers.Control.MousePosition({}),
+            ]
+        });
+
+    var mapnik = new OpenLayers.Layer.OSM("MAP"); 
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+
+    map.addLayers([mapnik,markers]);
+    map.setCenter(cntrposition, zoom);
+
+    markers.addMarker(new OpenLayers.Marker(cntrposition));
+
+    var click = new OpenLayers.Control.Click();
+    map.addControl(click);
+
+    click.activate();
+
+
+OpenLayers.Control.Click = OpenLayers.Class(OpenLayers.Control, {               
+ defaultHandlerOptions: {
+  'single': true,
+  'double': false,
+  'pixelTolerance': 0,
+  'stopSingle': false,
+  'stopDouble': false
+ },
+
+ initialize: function(options) {
+  this.handlerOptions = OpenLayers.Util.extend(
+   {}, this.defaultHandlerOptions
+  );
+  OpenLayers.Control.prototype.initialize.apply(
+   this, arguments
+  );
+  this.handler = new OpenLayers.Handler.Click(
+   this, {
+    'click': this.trigger
+   }, this.handlerOptions
+  );
+ },
+
+ trigger: function(e) {
+  var lonlat = map.getLonLatFromPixel(e.xy);
+  lonlat1= new OpenLayers.LonLat(lonlat.lon,lonlat.lat).transform(toProjection,fromProjection);
+  alert("Hello..."+lonlat1.lon + "  " +lonlat1.lat);
+
+ }
+
+});
+</script>
+
+                        <input type="text" class="form-control" id="inputLocation" name="inputLocation" placeholder="Location">
 
                     </div>
                     <div class="form-row">
