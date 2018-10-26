@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Dashboard</title>
+    <title>College Events - Events</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -70,8 +70,8 @@
                         <th scope="col">Name</th>
                         <th scope="col">Category</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Date Time</th>
+                        <th scope="col">Length</th>
                         <th scope="col">Location</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Email</th>
@@ -153,16 +153,18 @@
                 }
 
                 $eventDate = "event_date";
-                $date = DateTime::createFromFormat('U', $row[$eventDate]);
-                $date = $date->format('m-d-y');
+                $timezone = new DateTimeZone( "UTC" );
+                $date = DateTime::createFromFormat('U', $row[$eventDate], $timezone);
+                $date = $date->format('m-d-y h:i a');
                 
+                $length = $row['event_time'] / 60;
 
                   echo "<tr>
                           <td>$row[name]</td>
                           <td>$row[category]</td>
                           <td>$row[description]</td>
-                          <td>$row[event_time]</td>
                           <td>$date</td>
+                          <td>$length</td>
                           <td>$row[address]</td>
                           <td>$row[contact_number]</td>
                           <td>$row[contact_email]</td>
