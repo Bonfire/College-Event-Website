@@ -152,6 +152,10 @@
                 else{
                     $level = "RSO Members Only";
                 }
+
+                $eventDate = "event_date";
+                $date = DateTime::createFromFormat('U', $row[$eventDate]);
+                $date = $date->format('m-d-y');
                 
 
                   echo "<tr>
@@ -159,7 +163,7 @@
                           <td>$row[category]</td>
                           <td>$row[description]</td>
                           <td>$row[event_time]</td>
-                          <td>$row[event_date]</td>
+                          <td>$date</td>
                           <td>$row[address]</td>
                           <td>$row[contact_number]</td>
                           <td>$row[contact_email]</td>
