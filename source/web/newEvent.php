@@ -85,12 +85,14 @@ if (isset($_POST)
     && isset($_POST['inputLocation'])
     && isset($_POST['inputContactPhone'])
     && isset($_POST['inputContactEmail'])
+    && isset($_POST['inputLength'])
 ){
 
     $eventName = $_POST["inputEventName"];
     $state = $_POST['inputState'];
     $publicity = $_POST['inputPublicity'];
     $description = $_POST['inputEventDescription'];
+    $length = $_POST['inputLength'];
     $time = $_POST['inputEventTime'];
     $date = $_POST['inputEventDate'];
     $location = $_POST['inputLocation'];
@@ -100,6 +102,7 @@ if (isset($_POST)
 }
 
 $id = $_SESSION['id'];
+$univ = $_SESSION['univ'];
 
 if (!empty($eventName) && !empty($RSO))
 
@@ -111,15 +114,34 @@ if (!empty($eventName) && !empty($RSO))
     //$sql="SELECT university_id FROM `users` WHERE university_id = '$id'";
     //$result= $conn->query($sql);
     //$value = mysql_fetch_object($result);
-    
-    $date = DateTime::createFromFormat('Y-m-d', $date);
 
+    $date = $date. "-";
+    $date = $date. $time;
+    $timezone = new DateTimeZone( "UTC" );
+
+    if(!empty($length)){
+        $length = $length * 60; 
+    }
+   
+
+    $date = DateTime::createFromFormat('Y-m-d-G:i', $date, $timezone);
+
+    $sql="SELECT * FROM users where users.id = '$id'";
+    if(empty($email)){
+        if($query = $conn->prepare($sql))
+        {
+            $query->execute();
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+            $email = $result['email'];
+        }  
+    }
 
     if ($query = $conn->prepare('
-        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email)
-        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_time, :event_date, :contact_number, :contact_email)')) {
+        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email, university_id)
+        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_length, :event_date, :contact_number, :contact_email, :university_id)')) 
+    {  
         
-        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $time, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email ))) {
+        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_length' => $length, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $univ  ))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();
@@ -193,9 +215,7 @@ if (!empty($eventName) && !empty($RSO))
         die();
     }
 
-    $id = $_SESSION['id'];
-
-    $sql="SELECT name,id FROM organizations where organizations.owner_id ='$id'";
+    $sql="SELECT name,id FROM organizations where organizations.owner_id ='$_SESSION[id]'";
 
     if($query= $conn->prepare($sql)){
         $query->execute();
@@ -218,18 +238,59 @@ if (!empty($eventName) && !empty($RSO))
                         <label for="inputEventDescription">Description</label>
                         <input type="text" class="form-control" id="inputEventDescription" name="inputEventDescription" placeholder="This art exhibit...">
                     </div>
-                    <div class="form-group">
-                        <label for="inputEventTime">Time</label>
-                        <input type="text" class="form-control" id="inputEventTime" placeholder="1400" name="inputEventTime">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="inputEventTime">Time</label>
+                            <input type="time" class="form-control" id="inputEventTime" placeholder="1400" name="inputEventTime" required="">
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="inputLength">Event Length (hours)</label>
+                            <input type="text" class="form-control" id="inputLength" placeholder="1.5" name="inputLength" required="">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="inputEventDate">Date (mm/dd/yyyy)</label>
                         <input type="date" class="form-control" id="inputEventDate"
-                               placeholder="12/25/2018" name="inputEventDate">
+                               placeholder="12/25/2018" name="inputEventDate" required="">
                     </div>
                     <div class="form-group">
                         <label for="inputLocation">Location</label>
-                        <input type="text" class="form-control" id="inputLocation" name="inputLocation" placeholder="Address">
+                         <div  id="Map" style="height:300px"></div>
+
+<script src="OpenLayers.js"></script>
+<script>
+    var map, vectors, controls;
+
+                map = new OpenLayers.Map('Map');
+                var mapnik = new OpenLayers.Layer.OSM();
+                var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+                renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+
+                vectors = new OpenLayers.Layer.Vector("Vector Layer", {
+                    renderers: renderer
+                });
+
+                map.addLayers([mapnik, vectors]);
+
+                var fromProjection = new OpenLayers.Projection("EPSG:4326");
+                var toProjection   = new OpenLayers.Projection("EPSG:900913");
+                var position       = new OpenLayers.LonLat(-81.200108, 28.601966).transform( fromProjection, toProjection);
+
+                var markers = new OpenLayers.Layer.Markers( "Markers" );
+                map.addLayer(markers);
+                map.setCenter(position, 15);
+
+                map.events.register("click", map, function(e) 
+                {
+                    var position = map.getLonLatFromPixel(e.xy);
+                    var position= new OpenLayers.LonLat(position.lon.toFixed(3) , position.lat.toFixed(3));
+                    markers.clearMarkers();
+                    markers.addMarker(new OpenLayers.Marker(position));
+                    document.getElementById("inputLocation").value = position.lon.toFixed(3) + " " +position.lat.toFixed(3) ;
+                });
+
+</script>
+                        <input  type="text" class="form-control" id="inputLocation" name="inputLocation" placeholder="Location">
 
                     </div>
                     <div class="form-row">
