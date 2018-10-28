@@ -98,7 +98,7 @@
                 }
 
         echo "
-            <span class=\"mx-auto text-light\"><h4>Welcome, $entry[first_name] $entry[last_name]<span id=\"username\"></span></h4></span>
+            <span class=\"mx-auto text-light\"><h4>Welcome, $entry[first_name] $entry[last_name]</h4></span>
             <hr class=\"bg-light\">
                 <div class=\"form-group\">
                     <label for=\"accountEmail\" class=\"text-light\">Account Email: </label>
@@ -123,5 +123,65 @@
         </div>
     </form>
 </div>
+
+
+                    
+
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    //admin = 1
+    //super admin =2
+    if($_SESSION['perm'] == 1 || $_SESSION['perm'] == 2)
+    {
+        echo "
+            <div class=\"container-fluid\">
+            <form id=\"accountCard\">
+                <div class=\"row\">
+                    <div class=\"card w-75 mx-auto container-fluid p-3 bg-dark shadow\" style=\"margin-top: 10%; width: 100%\">
+                        <span class=\"mx-auto text-light\"><h4>Administration Tools</h4></span>
+                        <hr class=\"bg-light\">
+
+                        <div class=\"form-row mx-auto\">
+                            <div>
+                                <a href=\"user.php\">
+                                    <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Users</button>
+                                </a>
+                            </div>
+                            <div>
+                                <a href=\"rso.php\">
+                                    <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage RSO</button>
+                                </a>
+                            </div>
+        ";
+
+
+        if($_SESSION['perm'] == 2)
+        {
+           echo "
+            <div>
+                <a href=\"admins.php\">
+                    <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Admins</button>
+                </a>
+            </div>
+            "; 
+        }
+
+        echo "
+                            <hr class=\"bg-light\">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        ";
+    }
+?>
+
+
+
 </body>
 </html>

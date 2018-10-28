@@ -165,8 +165,7 @@ if (!empty($eventName) && !empty($RSO))
 
                     <div class="form-group">
                         <label for="inputEventName">Name</label>
-                        <input type="text" class="form-control" name="inputEventName" id="inputEventName" required=""
-                                placeholder="Art Exhibit" >
+                        <input type="text" class="form-control" name="inputEventName" id="inputEventName" required="" placeholder="Art Exhibit" >
                     </div>
 
                     <div class="form-group">
@@ -306,7 +305,7 @@ if (!empty($eventName) && !empty($RSO))
                 </form>
                 <div class="modal-footer d-flex justify-content-between">
                     <a href="events.php">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                        <button type="button" class="btn btn-secondary">Back</button>
                     </a>
                     <button type="submit" class="btn btn-primary" id="addEventButton">Save
                         Changes
