@@ -30,7 +30,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
             </li>
         </ul>
@@ -50,7 +50,7 @@
                 <form class="form-inline">
                     <div class="form-row">
                         <div class="form-group col-6">
-                            <a href="newEvent.php">
+                            <a href="newUser.php">
                                 <button type="button" class="btn btn-success">Add User</button>
                             </a>
                             <button type="button" class="btn btn-danger disabled" id="removeUser">Remove User

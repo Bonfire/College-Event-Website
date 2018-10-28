@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Dashboard</title>
+    <title>College Events - New Event</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -105,15 +105,7 @@ $id = $_SESSION['id'];
 $univ = $_SESSION['univ'];
 
 if (!empty($eventName) && !empty($RSO))
-
-    /*&& !empty($state) && !empty($publicity) && !empty($description) &&
-    !empty($time) && !empty($date) && !empty($location) && !empty($phone) && !empty($email))
-    */
-    {
-
-    //$sql="SELECT university_id FROM `users` WHERE university_id = '$id'";
-    //$result= $conn->query($sql);
-    //$value = mysql_fetch_object($result);
+{
 
     $date = $date. "-";
     $date = $date. $time;
