@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Events</title>
+    <title>College Events - Manage Users</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -49,29 +49,13 @@
             <div style="margin-bottom: 3%">
                 <form class="form-inline">
                     <div class="form-row">
-
-<?php
-    include('database.inc.php');
-
-    if(!isset($_SESSION)){
-        session_start();
-    }
-
-    //admin = 1
-    //super admin =2
-    if($_SESSION['perm'] == 1 || $_SESSION['perm'] == 2)
-    {
-        echo "
-            <div class=\"form-group col-6\">
-                <a href=\"newEvent.php\">
-                    <button type=\"button\" class=\"btn btn-success\">Add Event</button>
-                </a>
-                <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeEventButton\">Remove Event
-                </button>
-            </div>
-        ";
-    }
-?>
+                        <div class="form-group col-6">
+                            <a href="newEvent.php">
+                                <button type="button" class="btn btn-success">Add User</button>
+                            </a>
+                            <button type="button" class="btn btn-danger disabled" id="removeUser">Remove User
+                            </button>
+                        </div>
                         <div class="form-row" style="padding-left: 18px">
                             <div class="form-row" style="padding-right: 20px">
                                 <input type="text" class="form-control" id="inputFilter" placeholder="Filter">
@@ -90,16 +74,9 @@
                     <thead>
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Date Time</th>
-                        <th scope="col">Length</th>
-                        <th scope="col">Location</th>
-                        <th scope="col">Phone</th>
                         <th scope="col">Email</th>
                         <th scope="col">University</th>
-                        <th scope="col">RSO</th>
-                        <th scope="col">Publicity</th>
+                        <th scope="col">Permission Level</th>
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
@@ -126,16 +103,7 @@
         die();
     }
 
-    $sql="SELECT * FROM `events` E";
-
-
-    /*where E.publicity_level = '$all'
-            JOIN
-            SELECT * FROM `events` E, `users` U, `memberships` M  where E.publicity_level='$Students'
-            AND E.university_id = U.university_id AND U.id = '$id')
-            JOIN
-            SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)
-        */
+    $sql="SELECT * FROM users";
 
     if($query= $conn->prepare($sql))
     {
@@ -146,15 +114,7 @@
 
             if($row)
             {
-
-                $RSO = "SELECT name FROM organizations where organizations.id = '$row[organization_id]' LIMIT 0,1";
                 $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
-
-                if($query2 = $conn->prepare($RSO))
-                {
-                    $query2->execute();
-                    $RSO = $query2->fetch(PDO::FETCH_ASSOC);
-                }
 
                 if($query2 = $conn->prepare($University))
                 {
@@ -162,73 +122,25 @@
                     $University = $query2->fetch(PDO::FETCH_ASSOC);
                 }
 
-                if(($row['publicity_level']) == 0){
-                    $level = "Open For All";
+                if(($row['permission_level']) == 0){
+                    $level = "General User";
                 }
-                else if(($row['publicity_level']) == 1){
-                    $level = "University Students Only";
+                else if(($row['permission_level']) == 1){
+                    $level = "Admin";
                 }
                 else{
-                    $level = "RSO Members Only";
+                    $level = "Super Admin";
                 }
 
-                $eventDate = "event_date";
-                $timezone = new DateTimeZone( "UTC" );
-                $date = DateTime::createFromFormat('U', $row[$eventDate], $timezone);
-                $date = $date->format('m-d-y h:i a');
-                
-                $length = $row['event_time'] / 60;
-                $lonLat = explode(" ", $row['address']);
 
-                if(count($lonLat) == 2){
-                    $lon = (float) $lonLat[0];
-                    $lat = (float) $lonLat[1]; 
-                    $flag = 0;
-                }
-                else
-                {
-                    $flag = 1;
-                }
                     
-                
-
-                  echo "<tr>
-                          <td>$row[name]</td>
-                          <td>$row[category]</td>
-                          <td>$row[description]</td>
-                          <td>$date</td>
-                          <td>$length hours</td>
-                          ";
-
-
-                if( $flag == 1)
-                    echo "<td>No Location Given</td>";
-                else
-                    echo "
-                          <td style=\"margin: 0; padding: 0\">
-                            <div id=\"map_canvas\" style=\"width:256px; height:256px; margin: 0; padding: 0\"></div>
-                          </td>
-                          
-                      <script src=\"OpenLayers.js\"></script>
-                      <script>
-                            map = new OpenLayers.Map('map_canvas');
-                            var mapnik = new OpenLayers.Layer.OSM();
-                            var markers = new OpenLayers.Layer.Markers( \"Markers\" );
-
-                            map.addLayers([mapnik, markers]);
-                            var position = new OpenLayers.LonLat($lon, $lat);
-
-                            map.setCenter(position, 14);
-                            markers.addMarker(new OpenLayers.Marker(position));
-                      </script>";
-
-                  echo "
-                        <td>$row[contact_number]</td>
-                          <td>$row[contact_email]</td>
-                          <td>$University[name]</td>
-                          <td>$RSO[name]</td>
-                          <td>$level</td>
-                      </tr>
+                echo "
+                    <tr>
+                        <td>$row[first_name] $row[last_name]</td>
+                        <td>$row[email]</td>
+                        <td>$University[name]</td>
+                        <td>$level</td>
+                    </tr>
                   ";
 
 

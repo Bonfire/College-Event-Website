@@ -148,7 +148,7 @@
 
                         <div class=\"form-row mx-auto\">
                             <div>
-                                <a href=\"user.php\">
+                                <a href=\"users.php\">
                                     <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Users</button>
                                 </a>
                             </div>
@@ -163,11 +163,11 @@
         if($_SESSION['perm'] == 2)
         {
            echo "
-            <div>
-                <a href=\"admins.php\">
-                    <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Admins</button>
-                </a>
-            </div>
+                <div>
+                    <a href=\"admins.php\">
+                        <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Admins</button>
+                    </a>
+                </div>
             "; 
         }
 
