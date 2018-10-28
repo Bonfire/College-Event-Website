@@ -92,20 +92,13 @@
             </div>
 
             <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered table-hover" style="white-space: nowrap">
+                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;" >
                     <thead>
                     <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Category</th>
+                        <th scope="col" style="width: 200px;">Name</th>
+                        <th scope="col" style="width: 25%;">Address</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Date Time</th>
-                        <th scope="col">Length</th>
-                        <th scope="col">Location</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">University</th>
-                        <th scope="col">RSO</th>
-                        <th scope="col">Publicity</th>
+                        <th scope="col" style="width: 140px;">Number of Students</th>
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
@@ -132,7 +125,7 @@
         die();
     }
 
-    $sql="SELECT * FROM `events` E";
+    $sql="SELECT * FROM `universities` U";
 
 
     /*where E.publicity_level = '$all'
@@ -151,100 +144,19 @@
         {
 
             if($row)
-            {
-
-                $RSO = "SELECT name FROM organizations where organizations.id = '$row[organization_id]' LIMIT 0,1";
-                $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
-
-                if($query2 = $conn->prepare($RSO))
-                {
-                    $query2->execute();
-                    $RSO = $query2->fetch(PDO::FETCH_ASSOC);
-                }
-
-                if($query2 = $conn->prepare($University))
-                {
-                    $query2->execute();
-                    $University = $query2->fetch(PDO::FETCH_ASSOC);
-                }
-
-                if(($row['publicity_level']) == 0){
-                    $level = "Open For All";
-                }
-                else if(($row['publicity_level']) == 1){
-                    $level = "University Students Only";
-                }
-                else{
-                    $level = "RSO Members Only";
-                }
-
-                $eventDate = "event_date";
-                $timezone = new DateTimeZone( "UTC" );
-                $date = DateTime::createFromFormat('U', $row[$eventDate], $timezone);
-                $date = $date->format('m-d-y h:i a');
-                
-                $length = $row['event_time'] / 60;
-                $lonLat = explode(" ", $row['address']);
-
-                if(count($lonLat) == 2){
-                    $lon = (float) $lonLat[0];
-                    $lat = (float) $lonLat[1]; 
-                    $flag = 0;
-                }
-                else
-                {
-                    $flag = 1;
-                }
-                    
-                
+            {                
 
                   echo "<tr>
                           <td>$row[name]</td>
-                          <td>$row[category]</td>
-                          <td>$row[description]</td>
-                          <td>$date</td>
-                          <td>$length hours</td>
-                          ";
-
-
-                if( $flag == 1)
-                    echo "<td>No Location Given</td>";
-                else
-                    echo "
-                          <td style=\"margin: 0; padding: 0\">
-                            <div id=\"map_canvas\" style=\"width:256px; height:256px; margin: 0; padding: 0\"></div>
-                          </td>
-                          
-                      <script src=\"OpenLayers.js\"></script>
-                      <script>
-                            map = new OpenLayers.Map('map_canvas');
-                            var mapnik = new OpenLayers.Layer.OSM();
-                            var markers = new OpenLayers.Layer.Markers( \"Markers\" );
-
-                            map.addLayers([mapnik, markers]);
-                            var position = new OpenLayers.LonLat($lon, $lat);
-
-                            map.setCenter(position, 14);
-                            markers.addMarker(new OpenLayers.Marker(position));
-                      </script>";
-
-                  echo "
-                        <td>$row[contact_number]</td>
-                          <td>$row[contact_email]</td>
-                          <td>$University[name]</td>
-                          <td>$RSO[name]</td>
-                          <td>$level</td>
+                          <td>$row[address]</td>
+                          <td style=\"max-width: 100px; word-wrap: break-word;\">$row[description]</td>
+                          <td>$row[student_count]</td>
                       </tr>
                   ";
-
-
-
             }
-
         }
     }
 ?>
-
                 </tbody>
                 </table>
             </div>
