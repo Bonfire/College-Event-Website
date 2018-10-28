@@ -28,10 +28,16 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="dashboard.html">Dashboard <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="dashboard.html">Dashboard </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="events.php">Events</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="organizations.php">Organizations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="universities.php">Universities</a>
             </li>
         </ul>
     </div>
@@ -152,26 +158,6 @@
                                     <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Users</button>
                                 </a>
                             </div>
-                            <div>
-                                <a href=\"rso.php\">
-                                    <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage RSO</button>
-                                </a>
-                            </div>
-        ";
-
-
-        if($_SESSION['perm'] == 2)
-        {
-           echo "
-                <div>
-                    <a href=\"admins.php\">
-                        <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Admins</button>
-                    </a>
-                </div>
-            "; 
-        }
-
-        echo "
                             <hr class=\"bg-light\">
                         </div>
                     </div>
