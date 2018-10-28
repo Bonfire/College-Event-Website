@@ -33,6 +33,12 @@
             <li class="nav-item active">
                 <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="organizations.php">Organizations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="universities.php">Universities</a>
+            </li>
         </ul>
     </div>
 
@@ -49,15 +55,37 @@
             <div style="margin-bottom: 3%">
                 <form class="form-inline">
                     <div class="form-row">
-                        <div class="form-group col-6">
-                            <a href="newEvent.php">
-                                <button type="button" class="btn btn-success">Add Event</button>
-                            </a>
-                            <button type="button" class="btn btn-danger disabled" id="removeEventButton">Remove Event
-                            </button>
-                        </div>
-                        <div class="form-group col-6">
-                            <input type="text" class="form-control" id="inputFilter" placeholder="Filter">
+
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    //admin = 1
+    //super admin =2
+    if($_SESSION['perm'] == 1 || $_SESSION['perm'] == 2)
+    {
+        echo "
+            <div class=\"form-group col-6\">
+                <a href=\"newEvent.php\">
+                    <button type=\"button\" class=\"btn btn-success\">Add Event</button>
+                </a>
+                <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeEventButton\">Remove Event
+                </button>
+            </div>
+        ";
+    }
+?>
+                        <div class="form-row" style="padding-left: 18px">
+                            <div class="form-row" style="padding-right: 20px">
+                                <input type="text" class="form-control" id="inputFilter" placeholder="Filter">
+                            </div>
+                            <div class="form-row" style="height: 20px">
+                                <button type="submit" class="btn btn-primary" id="filterButton">Filter
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -139,13 +167,11 @@
                     $query2->execute();
                     $University = $query2->fetch(PDO::FETCH_ASSOC);
                 }
-                
-                $pub = "publicity_level";
 
-                if(($row[$pub]) == 0){
+                if(($row['publicity_level']) == 0){
                     $level = "Open For All";
                 }
-                else if(($row[$pub]) == 1){
+                else if(($row['publicity_level']) == 1){
                     $level = "University Students Only";
                 }
                 else{

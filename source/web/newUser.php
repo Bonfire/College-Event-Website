@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Register</title>
+    <title>College Events - New User</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -16,16 +16,34 @@
 </head>
 <body style="background: url('background.png')">
 <!-- Navbar -->
-<nav class="navbar navbar-dark bg-dark">
+<nav class="navbar navbar-dark navbar-expand-lg bg-dark">
     <a class="navbar-brand">
         <span class="ml-2 text-light" style="display: inline-block;">College Events</span>
     </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="events.php">Events</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="organizations.php">Organizations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="universities.php">Universities</a>
+            </li>
+        </ul>
+    </div>
+
     <form class="form-inline">
-        <a href="login.php">
-            <button class="btn btn-warning mr-2 my-sm-0" type="button">Sign In</button>
-        </a>
-        <a href="register.php">
-            <button class="btn btn-outline-warning my-2 my-sm-0" type="button">Register</button>
+        <a href="logout.php">
+            <button class="btn btn-outline-warning mr-2 my-sm-0" type="button">Sign Out</button>
         </a>
     </form>
 </nav>
@@ -39,7 +57,7 @@ include('database.inc.php');
 
 $userExistsAlert = "
         <div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
-        This email is already taken! <a href=\"login.php\" class=\"alert-link\">Click here to login</a>
+        This email is already taken!
         <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
         <span aria-hidden=\"true\">&times;</span>
         </button>
@@ -47,36 +65,15 @@ $userExistsAlert = "
 
 $registrationSuccessAlert = "
         <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
-        Account successfully created! Redirecting to login...
+        New User Created
         <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
         <span aria-hidden=\"true\">&times;</span>
         </button>
         </div>";
 
-$errorConnectingAlert = "
-        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
-        Error querying the database
-        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
-        <span aria-hidden=\"true\">&times;</span>
-        </button>
-        </div>";
 
-$alreadyLoggedInAlert = "
-        <div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">
-        Already logged in! Redirecting...
-        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
-        <span aria-hidden=\"true\">&times;</span>
-        </button>
-        </div>";
-
-if (isset($_SESSION['id'])) {
-    echo $alreadyLoggedInAlert;
-    ob_end_flush();
-    flush();
-
-    sleep(3);
-
-    echo "<script type=\"text/javascript\">window.location.href='dashboard.php';</script>";
+if(!isset($_SESSION)){
+    session_start();
 }
 
 // Check database connection
@@ -89,15 +86,16 @@ if (isset($_POST)
     && isset($_POST['inputFirstName'])
     && isset($_POST['inputLastName'])
     && isset($_POST['inputEmail'])
-    && isset($_POST['inputConfirmEmail'])
     && isset($_POST['inputPassword'])
     && isset($_POST['inputConfirmPassword'])
-    && isset($_POST['inputUniversity'])) {
+    && isset($_POST['inputUniversity'])
+    && isset($_POST['inputPerm'])) {
     $firstName = $_POST['inputFirstName'];
     $lastName = $_POST['inputLastName'];
     $email = $_POST['inputEmail'];
     $password = $_POST['inputPassword'];
     $university = $_POST['inputUniversity'];
+    $perm = $_POST['inputPerm'];
 }
 
 if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($password)) {
@@ -109,8 +107,8 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
             echo $userExistsAlert;
         } // Create the user
         else {
-            if ($query = $conn->prepare('INSERT INTO users (first_name, last_name, email, password, university_id) VALUES (:firstName, :lastName, :email, :password, :university)')) {
-                if ($query->execute(array(':firstName' => $firstName, ':lastName' => $lastName, ':email' => $email, ':password' => $password, ':university' => $university))) {
+            if ($query = $conn->prepare('INSERT INTO users (first_name, last_name, email, password, university_id, permission_level) VALUES (:firstName, :lastName, :email, :password, :university, :permission_level )')) {
+                if ($query->execute(array(':firstName' => $firstName, ':lastName' => $lastName, ':email' => $email, ':password' => $password, ':university' => $university, ':permission_level' => $perm))) {
                     echo $registrationSuccessAlert;
 
                     ob_end_flush();
@@ -118,7 +116,7 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
 
                     sleep(3);
 
-                    echo "<script type=\"text/javascript\">window.location.href='login.php';</script>";
+                    echo "<script type=\"text/javascript\">window.location.href='users.php';</script>";
                 } else {
                     echo $errorConnectingAlert;
                 }
@@ -133,8 +131,6 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
     <form id="registration_form" action="" method="post">
         <div class="row">
             <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 5%;">
-                <div style="text-align: center;" class="text-light"><h4>Register Here</h4></div>
-                <hr>
                 <form class="container was-validated" action="" method="POST" novalidate>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -155,12 +151,6 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
                                placeholder="name@email.com" required
                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
                         <div class="invalid-feedback" class="text-light">Please provide a valid email.</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputConfirmEmail" class="text-light">Confirm Email</label>
-                        <input type="text" class="form-control" name="inputConfirmEmail" id="inputConfirmEmail"
-                               placeholder="name@email.com"
-                               required>
                     </div>
 
                     <div class="form-group">
@@ -206,6 +196,25 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
 ?>
                         </select>
                     </div>
+                     <div class="form-group">
+                        <label for="inputPerm" class="text-light" >User Level</label>
+                        <select id="inputPerm" class="form-control" name="inputPerm">
+                            <option selected value=""></option>
+                            <option value="0">General User</option>
+                            <option value="1">Admin</option>
+
+<?php
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    if($_SESSION['perm'] == 2)
+    {
+        echo "<option value=\"2\">Super Admin</option>";
+    }
+?>
+                        </select>
+                    </div>
 
                     <div class="form-group">
                         <label for="inputPassword" class="text-light">Password</label>
@@ -221,7 +230,7 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
                                id="inputConfirmPassword" required>
                     </div>
 
-                    <button type="submit" class="btn btn-warning text-dark" id="register">Register
+                    <button type="submit" class="btn btn-warning text-dark" id="register">Create User
                     </button>
                 </form>
                 <hr>

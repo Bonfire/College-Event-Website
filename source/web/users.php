@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Universities</title>
+    <title>College Events - Manage Users</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -30,14 +30,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
-            <li class="nav-item ">
-                <a class="nav-link" href="events.php">Events </a>
+            <li class="nav-item">
+                <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="organizations.php">Organizations</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="universities.php">Universities<span class="sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="universities.php">Universities</a>
             </li>
         </ul>
     </div>
@@ -55,29 +55,13 @@
             <div style="margin-bottom: 3%">
                 <form class="form-inline">
                     <div class="form-row">
-
-<?php
-    include('database.inc.php');
-
-    if(!isset($_SESSION)){
-        session_start();
-    }
-
-    //admin = 1
-    //super admin =2
-    if($_SESSION['perm'] == 2)
-    {
-        echo "
-            <div class=\"form-group col-6\">
-                <a href=\"newUniversity.php\">
-                    <button type=\"button\" class=\"btn btn-success\">Add Universities</button>
-                </a>
-                <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeUniversities\">Remove Universities
-                </button>
-            </div>
-        ";
-    }
-?>
+                        <div class="form-group col-6">
+                            <a href="newUser.php">
+                                <button type="button" class="btn btn-success">Add User</button>
+                            </a>
+                            <button type="button" class="btn btn-danger disabled" id="removeUser">Remove User
+                            </button>
+                        </div>
                         <div class="form-row" style="padding-left: 18px">
                             <div class="form-row" style="padding-right: 20px">
                                 <input type="text" class="form-control" id="inputFilter" placeholder="Filter">
@@ -92,13 +76,13 @@
             </div>
 
             <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;" >
+                <table id="dataTable" class="table table-bordered table-hover" style="white-space: nowrap">
                     <thead>
                     <tr>
-                        <th scope="col" style="width: 200px;">Name</th>
-                        <th scope="col" style="width: 25%;">Address</th>
-                        <th scope="col">Description</th>
-                        <th scope="col" style="width: 140px;">Number of Students</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">University</th>
+                        <th scope="col">Permission Level</th>
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
@@ -125,16 +109,7 @@
         die();
     }
 
-    $sql="SELECT * FROM `universities` U";
-
-
-    /*where E.publicity_level = '$all'
-            JOIN
-            SELECT * FROM `events` E, `users` U, `memberships` M  where E.publicity_level='$Students'
-            AND E.university_id = U.university_id AND U.id = '$id')
-            JOIN
-            SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)
-        */
+    $sql="SELECT * FROM users";
 
     if($query= $conn->prepare($sql))
     {
@@ -144,19 +119,44 @@
         {
 
             if($row)
-            {                
+            {
+                $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
 
-                  echo "<tr>
-                          <td>$row[name]</td>
-                          <td>$row[address]</td>
-                          <td style=\"max-width: 100px; word-wrap: break-word;\">$row[description]</td>
-                          <td>$row[student_count]</td>
-                      </tr>
+                if($query2 = $conn->prepare($University))
+                {
+                    $query2->execute();
+                    $University = $query2->fetch(PDO::FETCH_ASSOC);
+                }
+
+                if(($row['permission_level']) == 0){
+                    $level = "General User";
+                }
+                else if(($row['permission_level']) == 1){
+                    $level = "Admin";
+                }
+                else{
+                    $level = "Super Admin";
+                }
+
+
+                    
+                echo "
+                    <tr>
+                        <td>$row[first_name] $row[last_name]</td>
+                        <td>$row[email]</td>
+                        <td>$University[name]</td>
+                        <td>$level</td>
+                    </tr>
                   ";
+
+
+
             }
+
         }
     }
 ?>
+
                 </tbody>
                 </table>
             </div>

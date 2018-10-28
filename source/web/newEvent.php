@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Dashboard</title>
+    <title>College Events - New Event</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -32,6 +32,12 @@
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="organizations.php">Organizations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="universities.php">Universities</a>
             </li>
         </ul>
     </div>
@@ -105,15 +111,7 @@ $id = $_SESSION['id'];
 $univ = $_SESSION['univ'];
 
 if (!empty($eventName) && !empty($RSO))
-
-    /*&& !empty($state) && !empty($publicity) && !empty($description) &&
-    !empty($time) && !empty($date) && !empty($location) && !empty($phone) && !empty($email))
-    */
-    {
-
-    //$sql="SELECT university_id FROM `users` WHERE university_id = '$id'";
-    //$result= $conn->query($sql);
-    //$value = mysql_fetch_object($result);
+{
 
     $date = $date. "-";
     $date = $date. $time;
@@ -165,8 +163,7 @@ if (!empty($eventName) && !empty($RSO))
 
                     <div class="form-group">
                         <label for="inputEventName">Name</label>
-                        <input type="text" class="form-control" name="inputEventName" id="inputEventName" required=""
-                                placeholder="Art Exhibit" >
+                        <input type="text" class="form-control" name="inputEventName" id="inputEventName" required="" placeholder="Art Exhibit" >
                     </div>
 
                     <div class="form-group">
@@ -306,7 +303,7 @@ if (!empty($eventName) && !empty($RSO))
                 </form>
                 <div class="modal-footer d-flex justify-content-between">
                     <a href="events.php">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                        <button type="button" class="btn btn-secondary">Back</button>
                     </a>
                     <button type="submit" class="btn btn-primary" id="addEventButton">Save
                         Changes
