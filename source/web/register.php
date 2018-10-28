@@ -91,11 +91,13 @@ if (isset($_POST)
     && isset($_POST['inputEmail'])
     && isset($_POST['inputConfirmEmail'])
     && isset($_POST['inputPassword'])
-    && isset($_POST['inputConfirmPassword'])) {
+    && isset($_POST['inputConfirmPassword'])
+    && isset($_POST['inputUniversity'])) {
     $firstName = $_POST['inputFirstName'];
     $lastName = $_POST['inputLastName'];
     $email = $_POST['inputEmail'];
     $password = $_POST['inputPassword'];
+    $university = $_POST['inputUniversity'];
 }
 
 if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($password)) {
@@ -107,8 +109,8 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
             echo $userExistsAlert;
         } // Create the user
         else {
-            if ($query = $conn->prepare('INSERT INTO users (first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password)')) {
-                if ($query->execute(array(':firstName' => $firstName, ':lastName' => $lastName, ':email' => $email, ':password' => $password))) {
+            if ($query = $conn->prepare('INSERT INTO users (first_name, last_name, email, password, university_id) VALUES (:firstName, :lastName, :email, :password, :university)')) {
+                if ($query->execute(array(':firstName' => $firstName, ':lastName' => $lastName, ':email' => $email, ':password' => $password, ':university' => $university))) {
                     echo $registrationSuccessAlert;
 
                     ob_end_flush();
@@ -159,8 +161,52 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
                         <input type="text" class="form-control" name="inputConfirmEmail" id="inputConfirmEmail"
                                placeholder="name@email.com"
                                required>
-
                     </div>
+
+                    <div class="form-group">
+                        <label for="inputUniversity" class="text-light">University</label>
+                        <select id="inputUniversity" class="form-control"  name="inputUniversity" required="">
+                            <option selected value=""></option>
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
+
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
+
+    $sql="SELECT id, name FROM universities ";
+
+    if($query= $conn->prepare($sql)){
+        $query->execute();
+
+        foreach ($query as $row){
+
+            if($row)
+            {
+
+            echo "<option value=\"$row[id]\">$row[name]</option>"; 
+            }
+
+        }
+    }
+?>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="inputPassword" class="text-light">Password</label>
                         <input type="password" class="form-control" name="inputPassword" id="inputPassword" required
