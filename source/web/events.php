@@ -158,6 +158,19 @@
                 $date = $date->format('m-d-y h:i a');
                 
                 $length = $row['event_time'] / 60;
+                $lonLat = explode(" ", $row['address']);
+
+                if(count($lonLat) == 2){
+                    $lon = (float) $lonLat[0];
+                    $lat = (float) $lonLat[1]; 
+                    $flag = 0;
+                }
+                else
+                {
+                    $flag = 1;
+                }
+                    
+                
 
                   echo "<tr>
                           <td>$row[name]</td>
@@ -165,13 +178,41 @@
                           <td>$row[description]</td>
                           <td>$date</td>
                           <td>$length hours</td>
-                          <td>$row[address]</td>
-                          <td>$row[contact_number]</td>
+                          ";
+
+
+                if( $flag == 1)
+                    echo "<td>No Location Given</td>";
+                else
+                    echo "
+                          <td style=\"margin: 0; padding: 0\">
+                            <div id=\"map_canvas\" style=\"width:256px; height:256px; margin: 0; padding: 0\"></div>
+                          </td>
+                          
+                      <script src=\"OpenLayers.js\"></script>
+                      <script>
+                            map = new OpenLayers.Map('map_canvas');
+                            var mapnik = new OpenLayers.Layer.OSM();
+                            var markers = new OpenLayers.Layer.Markers( \"Markers\" );
+
+                            map.addLayers([mapnik, markers]);
+                            var position = new OpenLayers.LonLat($lon, $lat);
+
+                            map.setCenter(position, 14);
+                            markers.addMarker(new OpenLayers.Marker(position));
+                      </script>";
+
+                  echo "
+                        <td>$row[contact_number]</td>
                           <td>$row[contact_email]</td>
                           <td>$University[name]</td>
                           <td>$RSO[name]</td>
                           <td>$level</td>
-                      </tr>"; 
+                      </tr>
+                  ";
+
+
+
             }
 
         }
