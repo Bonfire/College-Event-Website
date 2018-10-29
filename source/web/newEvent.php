@@ -107,9 +107,6 @@ if (isset($_POST)
     $RSO = $_POST['inputRSO'];
 }
 
-$id = $_SESSION['id'];
-$univ = $_SESSION['univ'];
-
 if (!empty($eventName) && !empty($RSO))
 {
 
@@ -124,7 +121,7 @@ if (!empty($eventName) && !empty($RSO))
 
     $date = DateTime::createFromFormat('Y-m-d-G:i', $date, $timezone);
 
-    $sql="SELECT * FROM users where users.id = '$id'";
+    $sql="SELECT * FROM users where users.id = $_SESSION['id']";
     if(empty($email)){
         if($query = $conn->prepare($sql))
         {
@@ -139,7 +136,7 @@ if (!empty($eventName) && !empty($RSO))
         VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_length, :event_date, :contact_number, :contact_email, :university_id)')) 
     {  
         
-        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_length' => $length, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $univ  ))) {
+        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_length' => $length, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $_SESSION['univ'] ))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();

@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - New University</title>
+    <title>College Events - New Organization</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -30,7 +30,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -83,29 +83,26 @@ if (!$conn) {
 if (isset($_POST)
     && isset($_POST['inputName'])
     && isset($_POST['inputDescription'])
-    && isset($_POST['inputAddress'])
 ){
-
     $Name = $_POST["inputName"];
     $description = $_POST['inputDescription'];
-    $location = $_POST['inputAddress'];
 }
 
-if (!empty($Name) && !empty($location) && !empty(($description)))
+if (!empty($Name)  && !empty(($description)))
 {
     if ($query = $conn->prepare('
-        INSERT INTO universities (name, description, address)
-        VALUES (:name, :description, :address)')) 
+        INSERT INTO organizations (name, owner_id, university_id)
+        VALUES (:name, :owner, :university)')) 
     {  
         
-        if ($query->execute(array(':name' => $Name, ':description' => $description, ':address' => $location))) {
+        if ($query->execute(array(':name' => $Name, ':owner' => $_SESSION['id'], ':university' => $_SESSION['univ']))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();
             flush();
             sleep(3);
 
-            echo "<script type=\"text/javascript\">window.location.href='universities.php';</script>";
+            echo "<script type=\"text/javascript\">window.location.href='organizations.php';</script>";
         }
         else {
             echo $errorConnectingAlert;
@@ -119,24 +116,19 @@ if (!empty($Name) && !empty($location) && !empty(($description)))
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
-                    <span class="mx-auto"><h4>New University</h4></span>
+                    <span class="mx-auto"><h4>New Organization</h4></span>
                     <hr class="bg-light">
                     <div class="form-group">
                         <label for="inputName">Name</label>
-                        <input type="text" class="form-control" name="inputName" id="inputName" required="" placeholder="University of..." >
+                        <input type="text" class="form-control" name="inputName" id="inputName" required="" placeholder="Name of Organization" >
                     </div>
                     <div class="form-group">
                         <label for="inputDescription">Description</label>
-                        <input type="text" class="form-control" id="inputDescription" name="inputDescription" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputAddress">Address</label>
-                        <input type="text" class="form-control" id="inputAddress"
-                               placeholder="" name="inputAddress" required="">
+                        <input type="text" class="form-control" id="inputDescription" name="inputDescription" placeholder="We do...">
                     </div>
                 </form>
                 <div class="modal-footer d-flex justify-content-between">
-                    <a href="universities.php">
+                    <a href="organizations.php">
                         <button type="button" class="btn btn-secondary">Back</button>
                     </a>
                     <button type="submit" class="btn btn-primary" id="addButton">Save

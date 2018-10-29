@@ -72,7 +72,7 @@
                 <a href=\"newOrg.php\">
                     <button type=\"button\" class=\"btn btn-success\">Add Organization</button>
                 </a>
-                <a href=\"newOrg.php\">
+                <a href=\"joinOrg.php\">
                     <button type=\"button\" class=\"btn btn-success\">Join Organization</button>
                 </a>
                 <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeUniversities\">Remove Organization
@@ -155,10 +155,9 @@
 
                 echo "<tr>
                           <td>$row[name]</td>
-                          <td>Description Table to be added</td>
-                          <td>$User[first_name] $User[last_name]</td>
+                          <td>Description Field to be added</td>
                           <td>$University[name]</td>
-
+                          <td>$User[first_name] $User[last_name]</td>
                       </tr>
                 ";
             }
