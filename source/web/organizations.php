@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Universities</title>
+    <title>College Events - Organizations</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -33,11 +33,11 @@
             <li class="nav-item ">
                 <a class="nav-link" href="events.php">Events </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="organizations.php">Organizations</a>
-            </li>
             <li class="nav-item active">
-                <a class="nav-link" href="universities.php">Universities<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="organizations.php">Organizations<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="universities.php">Universities</a>
             </li>
         </ul>
     </div>
@@ -65,14 +65,17 @@
 
     //admin = 1
     //super admin =2
-    if($_SESSION['perm'] == 2)
+    if($_SESSION['perm'] == 2 || $_SESSION['perm'] == 1)
     {
         echo "
             <div class=\"form-group col-6\">
-                <a href=\"newUniversity.php\">
-                    <button type=\"button\" class=\"btn btn-success\">Add Universities</button>
+                <a href=\"newOrg.php\">
+                    <button type=\"button\" class=\"btn btn-success\">Add Organization</button>
                 </a>
-                <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeUniversities\">Remove Universities
+                <a href=\"newOrg.php\">
+                    <button type=\"button\" class=\"btn btn-success\">Join Organization</button>
+                </a>
+                <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeUniversities\">Remove Organization
                 </button>
             </div>
         ";
@@ -95,10 +98,10 @@
                 <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;" >
                     <thead>
                     <tr>
-                        <th scope="col" style="width: 200px;">Name</th>
-                        <th scope="col" style="width: 25%;">Address</th>
+                        <th scope="col">Name</th>
                         <th scope="col">Description</th>
-                        <th scope="col" style="width: 140px;">Number of Users</th>
+                        <th scope="col">University</th>
+                        <th scope="col">Owner</th>
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
@@ -125,7 +128,7 @@
         die();
     }
 
-    $sql="SELECT * FROM `universities` U";
+    $sql="SELECT * FROM `organizations` O";
 
     if($query= $conn->prepare($sql))
     {
@@ -133,15 +136,29 @@
 
         foreach ($query as $row)
         {
-
             if($row)
-            {                
+            {  
+                $User = "SELECT * FROM users where users.id = '$row[owner_id]' LIMIT 0,1";
+                $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
+
+                if($query2 = $conn->prepare($User))
+                {
+                    $query2->execute();
+                    $User = $query2->fetch(PDO::FETCH_ASSOC);
+                }
+
+                if($query2 = $conn->prepare($University))
+                {
+                    $query2->execute();
+                    $University = $query2->fetch(PDO::FETCH_ASSOC);
+                }       
 
                 echo "<tr>
                           <td>$row[name]</td>
-                          <td>$row[address]</td>
-                          <td style=\"max-width: 100px; word-wrap: break-word;\">$row[description]</td>
-                          <td>$row[student_count]</td>
+                          <td>Description Table to be added</td>
+                          <td>$User[first_name] $User[last_name]</td>
+                          <td>$University[name]</td>
+
                       </tr>
                 ";
             }
