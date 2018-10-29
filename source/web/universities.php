@@ -98,7 +98,7 @@
                         <th scope="col" style="width: 200px;">Name</th>
                         <th scope="col" style="width: 25%;">Address</th>
                         <th scope="col">Description</th>
-                        <th scope="col" style="width: 140px;">Number of Students</th>
+                        <th scope="col" style="width: 140px;">Number of Users</th>
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
@@ -108,7 +108,7 @@
     include('database.inc.php');
 
     if(!isset($_SESSION)){
-        //session_start();
+        session_start();
     }
 
     $errorConnectingAlert = "
@@ -126,7 +126,6 @@
     }
 
     $sql="SELECT * FROM `universities` U";
-
 
     /*where E.publicity_level = '$all'
             JOIN
@@ -146,13 +145,13 @@
             if($row)
             {                
 
-                  echo "<tr>
+                echo "<tr>
                           <td>$row[name]</td>
                           <td>$row[address]</td>
                           <td style=\"max-width: 100px; word-wrap: break-word;\">$row[description]</td>
                           <td>$row[student_count]</td>
                       </tr>
-                  ";
+                ";
             }
         }
     }

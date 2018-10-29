@@ -20,7 +20,6 @@
     <a class="navbar-brand">
         <span class="ml-2 text-light" style="display: inline-block;">College Events</span>
     </a>
-
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -86,7 +85,6 @@
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
-
                     <tbody id="tableEvents">
 <?php
     include('database.inc.php');
@@ -113,11 +111,10 @@
 
     if($query= $conn->prepare($sql))
     {
-      $query->execute();
+        $query->execute();
 
         foreach ($query as $row)
         {
-
             if($row)
             {
                 $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
@@ -137,8 +134,6 @@
                 else{
                     $level = "Super Admin";
                 }
-
-
                     
                 echo "
                     <tr>
@@ -148,15 +143,10 @@
                         <td>$level</td>
                     </tr>
                   ";
-
-
-
             }
-
         }
     }
 ?>
-
                 </tbody>
                 </table>
             </div>

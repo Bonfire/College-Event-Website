@@ -20,7 +20,6 @@
     <a class="navbar-brand">
         <span class="ml-2 text-light" style="display: inline-block;">College Events</span>
     </a>
-
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -28,7 +27,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="dashboard.html">Dashboard </a>
+                <a class="nav-link" href="dashboard.php">Dashboard </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="events.php">Events</a>
@@ -53,8 +52,7 @@
 <div class="container-fluid">
     <form id="accountCard">
         <div class="row">
-            <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">
-                
+            <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">              
  <?php
     include('database.inc.php');
 
@@ -129,10 +127,6 @@
         </div>
     </form>
 </div>
-
-
-                    
-
 <?php
     include('database.inc.php');
 
@@ -166,8 +160,5 @@
         ";
     }
 ?>
-
-
-
 </body>
 </html>
