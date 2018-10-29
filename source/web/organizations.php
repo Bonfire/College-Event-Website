@@ -55,6 +55,10 @@
             <div style="margin-bottom: 3%">
                 <form class="form-inline">
                     <div class="form-row">
+                        <div class="form-group col-6">
+                            <a href="joinOrg.php">
+                                <button type="button" class="btn btn-success">Join Organization</button>
+                            </a>
 
 <?php
     include('database.inc.php');
@@ -68,19 +72,16 @@
     if($_SESSION['perm'] == 2 || $_SESSION['perm'] == 1)
     {
         echo "
-            <div class=\"form-group col-6\">
                 <a href=\"newOrg.php\">
                     <button type=\"button\" class=\"btn btn-success\">Add Organization</button>
                 </a>
-                <a href=\"joinOrg.php\">
-                    <button type=\"button\" class=\"btn btn-success\">Join Organization</button>
-                </a>
+                
                 <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeUniversities\">Remove Organization
                 </button>
-            </div>
         ";
     }
 ?>
+                        </div>
                         <div class="form-row" style="padding-left: 18px">
                             <div class="form-row" style="padding-right: 20px">
                                 <input type="text" class="form-control" id="inputFilter" placeholder="Filter">

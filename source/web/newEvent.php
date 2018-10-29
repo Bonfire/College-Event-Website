@@ -121,7 +121,7 @@ if (!empty($eventName) && !empty($RSO))
 
     $date = DateTime::createFromFormat('Y-m-d-G:i', $date, $timezone);
 
-    $sql="SELECT * FROM users where users.id = $_SESSION['id']";
+    $sql="SELECT * FROM users where users.id = $_SESSION[id]";
     if(empty($email)){
         if($query = $conn->prepare($sql))
         {
@@ -157,7 +157,9 @@ if (!empty($eventName) && !empty($RSO))
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
-                    <span class="mx-auto"><h4>New Event</h4></span>
+                    <div class="form-row">
+                        <span class="mx-auto"><h4>New Event</h4></span>
+                    </div>
                     <hr class="bg-light">
                     <div class="form-group">
                         <label for="inputEventName">Name</label>
@@ -188,7 +190,7 @@ if (!empty($eventName) && !empty($RSO))
                     <div class="form-group">
                         <label for="inputRSO">RSO</label>
                         <select id="inputRSO" class="form-control"  name="inputRSO" required="">
-                            <option selected value=""></option>
+                        <option selected value=""></option>
 <?php
     include('database.inc.php');
 

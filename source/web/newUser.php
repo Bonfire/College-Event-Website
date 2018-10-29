@@ -133,7 +133,9 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
-                    <span class="mx-auto"><h4>New User</h4></span>
+                    <div class="form-row">
+                        <span class="mx-auto"><h4>New User</h4></span>
+                    </div>
                     <hr class="bg-light">
                     <div class="form-row">
                         <div class="form-group col-md-6">

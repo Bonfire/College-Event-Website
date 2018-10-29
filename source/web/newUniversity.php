@@ -119,7 +119,9 @@ if (!empty($Name) && !empty($location) && !empty(($description)))
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
-                    <span class="mx-auto"><h4>New University</h4></span>
+                    <div class="form-row">
+                        <span class="mx-auto"><h4>New University</h4></span>
+                    </div>
                     <hr class="bg-light">
                     <div class="form-group">
                         <label for="inputName">Name</label>
