@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Manage Users</title>
+    <title>College Events - Organizations</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -20,6 +20,7 @@
     <a class="navbar-brand">
         <span class="ml-2 text-light" style="display: inline-block;">College Events</span>
     </a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -29,11 +30,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="dashboard.php">Dashboard</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="events.php">Events <span class="sr-only">(current)</span></a>
+            <li class="nav-item ">
+                <a class="nav-link" href="events.php">Events </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="organizations.php">Organizations</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="organizations.php">Organizations<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="universities.php">Universities</a>
@@ -55,11 +56,31 @@
                 <form class="form-inline">
                     <div class="form-row">
                         <div class="form-group col-6">
-                            <a href="newUser.php">
-                                <button type="button" class="btn btn-success">Add User</button>
+                            <a href="joinOrg.php">
+                                <button type="button" class="btn btn-success">Join Organization</button>
                             </a>
-                            <button type="button" class="btn btn-danger disabled" id="removeUser">Remove User
-                            </button>
+
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    //admin = 1
+    //super admin =2
+    if($_SESSION['perm'] == 2 || $_SESSION['perm'] == 1)
+    {
+        echo "
+                <a href=\"newOrg.php\">
+                    <button type=\"button\" class=\"btn btn-success\">Add Organization</button>
+                </a>
+                
+                <button type=\"button\" class=\"btn btn-danger disabled\" id=\"removeUniversities\">Remove Organization
+                </button>
+        ";
+    }
+?>
                         </div>
                         <div class="form-row" style="padding-left: 18px">
                             <div class="form-row" style="padding-right: 20px">
@@ -75,22 +96,23 @@
             </div>
 
             <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered table-hover" style="white-space: nowrap">
+                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;" >
                     <thead>
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Email</th>
+                        <th scope="col">Description</th>
                         <th scope="col">University</th>
-                        <th scope="col">Permission Level</th>
+                        <th scope="col">Owner</th>
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
+
                     <tbody id="tableEvents">
 <?php
     include('database.inc.php');
 
     if(!isset($_SESSION)){
-        //session_start();
+        session_start();
     }
 
     $errorConnectingAlert = "
@@ -107,42 +129,38 @@
         die();
     }
 
-    $sql="SELECT * FROM users";
+    $sql="SELECT * FROM `organizations` O";
 
     if($query= $conn->prepare($sql))
     {
-        $query->execute();
+      $query->execute();
 
         foreach ($query as $row)
         {
             if($row)
-            {
+            {  
+                $User = "SELECT * FROM users where users.id = '$row[owner_id]' LIMIT 0,1";
                 $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
+
+                if($query2 = $conn->prepare($User))
+                {
+                    $query2->execute();
+                    $User = $query2->fetch(PDO::FETCH_ASSOC);
+                }
 
                 if($query2 = $conn->prepare($University))
                 {
                     $query2->execute();
                     $University = $query2->fetch(PDO::FETCH_ASSOC);
-                }
+                }       
 
-                if(($row['permission_level']) == 0){
-                    $level = "General User";
-                }
-                else if(($row['permission_level']) == 1){
-                    $level = "Admin";
-                }
-                else{
-                    $level = "Super Admin";
-                }
-                    
-                echo "
-                    <tr>
-                        <td>$row[first_name] $row[last_name]</td>
-                        <td>$row[email]</td>
-                        <td>$University[name]</td>
-                        <td>$level</td>
-                    </tr>
-                  ";
+                echo "<tr>
+                          <td>$row[name]</td>
+                          <td>Description Field to be added</td>
+                          <td>$University[name]</td>
+                          <td>$User[first_name] $User[last_name]</td>
+                      </tr>
+                ";
             }
         }
     }

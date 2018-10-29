@@ -27,7 +27,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="dashboard.html">Dashboard <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="dashboard.php">Dashboard <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="events.php">Events</a>
@@ -128,25 +128,30 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
 
 <!-- Register Form -->
 <div class="container-fluid">
-    <form id="registration_form" action="" method="post">
-        <div class="row">
-            <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 5%;">
-                <form class="container was-validated" action="" method="POST" novalidate>
+<form action="" method="post">
+    <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
+        <div class="card-body">
+            <div style="margin-bottom: 3%">
+                <form class="form-inline" action="" method="POST">
+                    <div class="form-row">
+                        <span class="mx-auto"><h4>New User</h4></span>
+                    </div>
+                    <hr class="bg-light">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="inputFirstName" class="text-light">First Name</label>
+                            <label for="inputFirstName" >First Name</label>
                             <input type="text" class="form-control" name="inputFirstName" id="inputFirstName"
                                    placeholder="John" required>
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputLastName" class="text-light">Last Name</label>
+                            <label for="inputLastName">Last Name</label>
                             <input type="text" class="form-control" name="inputLastName" id="inputLastName"
                                    placeholder="Smith" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="inputEmail" class="text-light">Email</label>
+                        <label for="inputEmail">Email</label>
                         <input type="text" class="form-control" name="inputEmail" id="inputEmail"
                                placeholder="name@email.com" required
                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
@@ -154,7 +159,7 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
                     </div>
 
                     <div class="form-group">
-                        <label for="inputUniversity" class="text-light">University</label>
+                        <label for="inputUniversity">University</label>
                         <select id="inputUniversity" class="form-control"  name="inputUniversity" required="">
                             <option selected value=""></option>
 <?php
@@ -197,7 +202,7 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
                         </select>
                     </div>
                      <div class="form-group">
-                        <label for="inputPerm" class="text-light" >User Level</label>
+                        <label for="inputPerm" >User Level</label>
                         <select id="inputPerm" class="form-control" name="inputPerm">
                             <option selected value=""></option>
                             <option value="0">General User</option>
@@ -217,26 +222,31 @@ if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($passwor
                     </div>
 
                     <div class="form-group">
-                        <label for="inputPassword" class="text-light">Password</label>
+                        <label for="inputPassword" >Password</label>
                         <input type="password" class="form-control" name="inputPassword" id="inputPassword" required
                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
-                        <small id="passwordRequirement" class="form-text text-light">Your password must be at least 8
+                        <small id="passwordRequirement" class="form-text">Your password must be at least 8
                             characters long, contain uppercase letters, lowercase letters, and numbers.
                         </small>
                     </div>
                     <div class="form-group">
-                        <label for="inputConfirmPassword" class="text-light">Confirm Password</label>
+                        <label for="inputConfirmPassword">Confirm Password</label>
                         <input type="password" class="form-control" name="inputConfirmPassword"
                                id="inputConfirmPassword" required>
                     </div>
+                    <div class="modal-footer d-flex justify-content-between">
+                        <a href="users.php">
+                            <button type="button" class="btn btn-secondary">Back</button>
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="register">Save
+                            Changes
+                        </button>
+                    </div>
 
-                    <button type="submit" class="btn btn-warning text-dark" id="register">Create User
-                    </button>
-                </form>
-                <hr>
-            </div>
+               </div>
         </div>
-    </form>
+    </div>
+</form>
 </div>
 </body>
 </html>

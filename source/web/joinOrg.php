@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - Dashboard</title>
+    <title>College Events - Join Organizations</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -20,20 +20,21 @@
     <a class="navbar-brand">
         <span class="ml-2 text-light" style="display: inline-block;">College Events</span>
     </a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="dashboard.php">Dashboard </a>
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.php">Dashboard</a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="events.php">Events </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="events.php">Events</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="organizations.php">Organizations</a>
+                <a class="nav-link" href="organizations.php">Organizations<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="universities.php">Universities</a>
@@ -47,13 +48,27 @@
         </a>
     </form>
 </nav>
+<!-- Join -->
+<form action="" method="post">
+    <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
+        <div class="card-body">
+            <div style="margin-bottom: 3%">
+                <form class="form-inline" action="" method="POST">
+                    <div class="form-row">
+                        <span class="mx-auto"><h4>Join Organizations</h4></span>
+                        <a href="organizations.php">
+                            <button type="button" class="btn btn-secondary">Back</button>
+                        </a>
+                    </div>
+                    <hr class="bg-light">
+                   <div class="form-group">
+                        <label for="inputOrg">Organizations</label>
+                        <select id="inputOrg" class="form-control"  name="inputOrg" required="">
+                        <option selected value=""></option>
 
-<!-- Account Info Card -->
-<div class="container-fluid">
-    <form id="accountCard">
-        <div class="row">
-            <div class="card w-75 mx-auto container-fluid p-3 bg-dark shadow" style="margin-top: 10%;">              
- <?php
+
+
+<?php
     include('database.inc.php');
 
     if(!isset($_SESSION)){
@@ -74,62 +89,116 @@
         die();
     }
 
-    $sql = "SELECT * FROM `users` where users.id = '$_SESSION[id]'";
-    $University = "SELECT name FROM universities where universities.id = '$_SESSION[univ]'";
+    $sql="SELECT name,id FROM organizations where organizations.university_id ='$_SESSION[univ]'";
 
-    if($query = $conn->prepare($sql))
-    {
+    if($query= $conn->prepare($sql)){
         $query->execute();
-        $entry = $query->fetch(PDO::FETCH_ASSOC);
+
+        foreach ($query as $row){
+
+            if($row)
+            {
+
+            echo "<option value=\"$row[id]\">$row[name]</option>"; 
+            }
+
+        }
     }
+?>   
+                        </select>
+                    </div>
+                </form>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary" id="addButton">Join
+                    </button>
+                </div>
+            </div>
 
-    if($query2 = $conn->prepare($University))
-    {
-        $query2->execute();
-        $University = $query2->fetch(PDO::FETCH_ASSOC);
+<?php
+
+if(!isset($_SESSION)){
+    session_start();
+}
+
+include('database.inc.php');
+
+$eventCreationSuccessAlert = "
+        <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
+        organization Joined!
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+$eventAlreadyJoined = "
+        <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
+        Already a Member of Organization!
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+$errorConnectingAlert = "
+        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+        Error querying the database
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+
+// Check database connection
+if (!$conn) {
+    echo $errorConnectingAlert;
+    die();
+}
+
+if (isset($_POST)
+    && isset($_POST['inputOrg'])
+){
+    $Org = $_POST['inputOrg'];
+}
+
+if (!empty($Org))
+{
+    $sql = "SELECT * FROM memberships WHERE memberships.user_id = $_SESSION[id] AND memberships.organization_id = $Org ";
+    if ($query = $conn->prepare($sql)) {
+        $query->execute();
     }
+    // This means that there already exists someone with this email!
+    if ($row = $query->fetch()) {
+        echo $eventAlreadyJoined;
+    } // Create the user
+    else {
+        if ($query = $conn->prepare('
+            INSERT INTO memberships (user_id, organization_id)
+            VALUES (:user_id, :organization_id)')) 
+        {  
+            
+            if ($query->execute(array(':user_id' => $_SESSION['id'], ':organization_id' => '$Org'))) {
+                echo $eventCreationSuccessAlert;
 
-    if($entry){
+                ob_end_flush();
+                flush();
+                sleep(3);
 
-        if(($_SESSION['perm']) == 0){
-                    $level = "General User";
-                }
-                else if($_SESSION['perm'] == 1){
-                    $level = "Admin";
-                }
-                else{
-                    $level = "Super Admin";
-                }
-
-        echo "
-            <span class=\"mx-auto text-light\"><h4>Welcome, $entry[first_name] $entry[last_name]</h4></span>
-            <hr class=\"bg-light\">
-                <div class=\"form-group\">
-                    <label for=\"accountEmail\" class=\"text-light\">Account Email: </label>
-                    <label for=\"accountEmail\" class=\"text-light\">$entry[email]</label>
-                    <span id=\"accountEmail\" class=\"text-light\"></span>
-                </div>
-                <div class=\"form-group\">
-                    <label for=\"accountType\" class=\"text-light\">Account Type: </label>
-                    <label for=\"accountType\" class=\"text-light\">$level</label>
-                    <span id=\"accountType\" class=\"text-light\"></span>
-                </div>
-                <div class=\"form-group\">
-                    <label for=\"accountUni\" class=\"text-light\">University: </label>
-                    <label for=\"accountUni\" class=\"text-light\">$University[name]</label>
-                    <span id=\"accountUni\" class=\"text-light\"></span>
-                </div>
-            <hr class=\"bg-light\">";
+                echo "<script type=\"text/javascript\">window.location.href='joinOrg.php';</script>";
+            }
+            else {
+                echo $errorConnectingAlert;
+            }
+        }
     }
+}
+?>
 
-?> 
 <!-- Table -->
             <div class="form-row">
-            <span class="mx-auto text-light"><h4>My Memberships</h4></span>
+                <span class="mx-auto"><h4>My Memberships</h4></span>
             </div>
             <hr class="bg-light">
             <div class="table-responsive">
-                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%; background-color: white;" >
+                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;" >
                     <thead>
                     <tr>
                         <th scope="col">Name</th>
@@ -191,40 +260,7 @@
                 </table>
             </div>
         </div>
-    </form>
-</div>
-<?php
-    include('database.inc.php');
-
-    if(!isset($_SESSION)){
-        session_start();
-    }
-
-    //admin = 1
-    //super admin =2
-    if($_SESSION['perm'] == 1 || $_SESSION['perm'] == 2)
-    {
-        echo "
-            <div class=\"container-fluid\">
-            <form id=\"accountCard\">
-                <div class=\"row\">
-                    <div class=\"card w-75 mx-auto container-fluid p-3 bg-dark shadow\" style=\"margin-top: 10%; width: 100%\">
-                        <span class=\"mx-auto text-light\"><h4>Administration Tools</h4></span>
-                        <hr class=\"bg-light\">
-
-                        <div class=\"form-row mx-auto\">
-                            <div>
-                                <a href=\"users.php\">
-                                    <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Users</button>
-                                </a>
-                            </div>
-                            <hr class=\"bg-light\">
-                        </div>
-                    </div>
-                </form>
-            </div>
-        ";
-    }
-?>
+    </div>
+</form>
 </body>
 </html>

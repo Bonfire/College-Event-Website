@@ -109,7 +109,6 @@
                        <!--  <th scope="col">Select</th> This is for the check box -->
                     </tr>
                     </thead>
-
                     <tbody id="tableEvents">
 <?php
     include('database.inc.php');
@@ -133,7 +132,6 @@
     }
 
     $sql="SELECT * FROM `events` E";
-
 
     /*where E.publicity_level = '$all'
             JOIN
@@ -196,8 +194,6 @@
                     $flag = 1;
                 }
                     
-                
-
                   echo "<tr>
                           <td>$row[name]</td>
                           <td>$row[category]</td>
@@ -236,15 +232,10 @@
                           <td>$level</td>
                       </tr>
                   ";
-
-
-
             }
-
         }
     }
 ?>
-
                 </tbody>
                 </table>
             </div>
