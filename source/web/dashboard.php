@@ -123,6 +123,72 @@
     }
 
 ?> 
+<!-- Table -->
+            <div class="form-row">
+            <span class="mx-auto text-light"><h4>My Memberships</h4></span>
+            </div>
+            <hr class="bg-light">
+            <div class="table-responsive">
+                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%; background-color: white;" >
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                       <!--  <th scope="col">Select</th> This is for the check box -->
+                    </tr>
+                    </thead>
+
+                    <tbody id="tableEvents">
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        //session_start();
+    }
+
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
+
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
+
+    $sql="SELECT * FROM `memberships` m WHERE m.user_id = '$_SESSION[id]'";
+
+    if($query= $conn->prepare($sql))
+    {
+      $query->execute();
+
+        foreach ($query as $row)
+        {
+            if($row)
+            {  
+                $org = "SELECT * FROM organizations where organizations.id = '$row[organization_id]' LIMIT 0,1";
+
+                if($query2 = $conn->prepare($org))
+                {
+                    $query2->execute();
+                    $org = $query2->fetch(PDO::FETCH_ASSOC);
+                }      
+
+                echo "<tr>
+                          <td style=\"max-width: 30px\">$org[name]</td>
+                          <td>Description Field to be added</td>
+                      </tr>
+                ";
+            }
+        }
+    }
+?>
+                </tbody>
+                </table>
             </div>
         </div>
     </form>
