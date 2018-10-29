@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - New Event</title>
+    <title>College Events - New University</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -122,7 +122,8 @@ if (!empty($Name) && !empty($location) && !empty(($description)))
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
-
+                    <span class="mx-auto"><h4>New University</h4></span>
+                    <hr class="bg-light">
                     <div class="form-group">
                         <label for="inputName">Name</label>
                         <input type="text" class="form-control" name="inputName" id="inputName" required="" placeholder="University of..." >

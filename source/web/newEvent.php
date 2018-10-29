@@ -160,7 +160,8 @@ if (!empty($eventName) && !empty($RSO))
         <div class="card-body">
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
-
+                    <span class="mx-auto"><h4>New Event</h4></span>
+                    <hr class="bg-light">
                     <div class="form-group">
                         <label for="inputEventName">Name</label>
                         <input type="text" class="form-control" name="inputEventName" id="inputEventName" required="" placeholder="Art Exhibit" >
