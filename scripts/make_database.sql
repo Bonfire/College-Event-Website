@@ -30,6 +30,7 @@ CREATE TABLE users (
 CREATE TABLE organizations (
     id INT AUTO_INCREMENT,
     name VARCHAR(200),
+    description VARCHAR(1000),
     owner_id INT,
     university_id INT,
     PRIMARY KEY (id),
