@@ -108,14 +108,15 @@ CREATE TRIGGER after_update_change_universities
 AFTER UPDATE ON users
 FOR EACH ROW
 BEGIN
-    UPDATE universities
     IF OLD.university_id <> NEW.university_id
     THEN
+        UPDATE universities
         SET student_count = student_count - 1
-        WHERE id = OLD.university_id
+        WHERE id = OLD.university_id;
+        UPDATE universities
         SET student_count = student_count + 1
-        WHERE id = NEW.university_id
-    END IF
+        WHERE id = NEW.university_id;
+    END IF;
 END$
 DELIMITER ;
 
