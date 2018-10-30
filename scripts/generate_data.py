@@ -160,14 +160,15 @@ class Organization:
     """Class that holds randomized data for an organization entry in the database."""
     INSERT = (
         "INSERT INTO organizations "
-        "(name, university_id, owner_id) "
-        "VALUES ('{0}', {1}, {2});\n"
+        "(name, description, university_id, owner_id) "
+        "VALUES ('{0}', '{1}', {2}, {3});\n"
     )
 
     def __init__(self, university_id, owner_id):
         """Initialize this organization with a name and owner ID."""
-        self.name = ENGLISH_FAKER.company()
         self.university_id = university_id
+        self.name = ENGLISH_FAKER.company()
+        self.description = LOREM_FAKER.paragraph()
         self.owner_id = owner_id
 
 
@@ -175,6 +176,7 @@ class Organization:
         """Return the SQL insertion command for this organization."""
         return self.INSERT.format(
             self.name,
+            self.description,
             self.university_id,
             self.owner_id,
         )
@@ -187,7 +189,7 @@ class Event:
         "(name, description, category, address, publicity_level, organization_id,"
         " university_id, event_time, event_data, contact_number, contact_email,"
         " ratings_count, ratings_average) VALUES "
-        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, {8}, {9}, '{10}', {11}, {12});\n"
+        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12});\n"
     )
 
     def __init__(self, university_id, organization_id):
