@@ -53,12 +53,11 @@ CREATE TABLE events (
     contact_email VARCHAR(100),
     ratings_count INT,
     ratings_average FLOAT,
-    PRIMARY KEY (address, event_time),
+    PRIMARY KEY (id),
     FOREIGN KEY (organization_id)
     REFERENCES organizations(id),
     FOREIGN KEY (university_id)
-    REFERENCES universities(id),
-    UNIQUE (id)
+    REFERENCES universities(id)
 );
 CREATE TABLE pictures (
     owner_id INT,
