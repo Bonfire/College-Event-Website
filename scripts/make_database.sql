@@ -49,11 +49,10 @@ CREATE TABLE events (
     organization_id INT,
     university_id INT,
     event_time INT,
-    event_date INT,
     contact_number VARCHAR(20),
     contact_email VARCHAR(100),
     ratings_count INT,
-    ratings_average INT,
+    ratings_average FLOAT,
     PRIMARY KEY (address, event_time),
     FOREIGN KEY (organization_id)
     REFERENCES organizations(id),

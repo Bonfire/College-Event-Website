@@ -10,14 +10,16 @@ from faker import Faker
 
 # Various constants and global objects.
 FOOTER = "\nQUIT"
-USER_COUNT = 10000
-EVENT_COUNT = 1000
-PICTURE_COUNT = 200
-COMMENT_COUNT = 2000
-UNIVERSITY_COUNT = 100
-ORGANIZATION_COUNT = 75
+USER_COUNT = 10
+EVENT_COUNT = 100
+PICTURE_COUNT = 2
+COMMENT_COUNT = 20
+UNIVERSITY_COUNT = 10
+MEMBERSHIP_COUNT = 20
+ORGANIZATION_COUNT = 10
+MAX_RATINGS_COUNT = 1000
+MAX_PUBLICITY_LEVEL = 3
 ENGLISH_FAKER = Faker()
-MEMBERSHIP_COUNT = 20000
 LOREM_FAKER = Faker("lt_LT")
 OUTPUT_PATH = "add_sample_data.sql"
 PICTURE_EXTENSIONS = (".jpg", ".png", ".bmp", ".gif", ".jpeg")
@@ -36,6 +38,13 @@ INSTITUTION_FORMATS = (
     "{0} State University",
     "{0} State College",
     "{0} Community College",
+)
+EVENT_FORMATS = (
+    "Party for {0}",
+    "Wake for {0}",
+    "Extravaganza for {0}",
+    "The Wedding of {0} and {0}",
+    "Church of {0} Meeting",
 )
 HEADER = (
     "/*\n"
@@ -187,19 +196,57 @@ class Event:
     INSERT = (
         "INSERT INTO events "
         "(name, description, category, address, publicity_level, organization_id,"
-        " university_id, event_time, event_data, contact_number, contact_email,"
+        " university_id, event_time, contact_number, contact_email,"
         " ratings_count, ratings_average) VALUES "
-        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12});\n"
+        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', '{9}', {10}, {11});\n"
     )
 
     def __init__(self, university_id, organization_id):
         """"""
-        pass
+        self.name = random.choice(EVENT_FORMATS).format(ENGLISH_FAKER.first_name())
+        self.description = LOREM_FAKER.paragraph()
+        self.category = LOREM_FAKER.word()
+        self.address = self.__generate_address()
+        self.publicity_level = random.randrange(1, MAX_PUBLICITY_LEVEL)
+        self.organization_id = organization_id
+        self.university_id = university_id
+        self.event_time = ENGLISH_FAKER.unix_time()
+        self.contact_number = ENGLISH_FAKER.phone_number()
+        self.contact_email = ENGLISH_FAKER.free_email()
+        self.ratings_count = random.randrange(1, MAX_RATINGS_COUNT)
+        self.ratings_average = random.randrange(1.0, 5.0)
+
+
+    def __generate_address(self):
+        """Generate a random address."""
+        address = []
+
+        address.append(ENGLISH_FAKER.building_number())
+        address.append(ENGLISH_FAKER.last_name())
+        address.append(random.choice(ROAD_TYPES) + ",")
+        address.append(ENGLISH_FAKER.city() + ",")
+        address.append(ENGLISH_FAKER.state_abbr())
+        address.append(ENGLISH_FAKER.postcode())
+
+        return " ".join(address)
 
 
     def __str__(self):
         """"""
-        return ""
+        return self.INSERT.format(
+            self.name,
+            self.description,
+            self.category,
+            self.address,
+            self.publicity_level,
+            self.organization_id,
+            self.university_id,
+            self.event_time,
+            self.contact_number,
+            self.contact_email,
+            self.ratings_count,
+            self.ratings_average,
+        )
 
 
 class Picture:
@@ -268,10 +315,8 @@ class Membership:
 
 
 # Main entry point to script.
-# Generate random users and universities. ###
 universities = [University() for university in range(UNIVERSITY_COUNT)]
 users = [User(random.randrange(1, len(universities))) for user in range(USER_COUNT)]
-
 organizations = []
 for organization in range(ORGANIZATION_COUNT):
     organizations.append(
@@ -280,14 +325,11 @@ for organization in range(ORGANIZATION_COUNT):
             random.randrange(1, len(users))
         )
     )
-
 events = [Event(1, 1) for event in range(EVENT_COUNT)]
 pictures = [Picture(random.randrange(1, len(events))) for count in range(PICTURE_COUNT)]
-
 comments = []
 for comment in range(COMMENT_COUNT):
     comments.append(Comment(random.randrange(1, len(events)), random.randrange(1, len(users))))
-
 memberships = []
 for membership in range(MEMBERSHIP_COUNT):
     memberships.append(
@@ -306,7 +348,6 @@ with open(OUTPUT_PATH, "w") as f:
         f.write(str(user))
     for organization in organizations:
         f.write(str(organization))
-    """
     for event in events:
         f.write(str(event))
     for picture in pictures:
@@ -315,5 +356,5 @@ with open(OUTPUT_PATH, "w") as f:
         f.write(str(comment))
     for membership in memberships:
         f.write(str(membership))
-    """
+    
     f.write(FOOTER)
