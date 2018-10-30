@@ -10,41 +10,41 @@ from faker import Faker
 
 # Various constants and global objects.
 FOOTER = "\nQUIT"
-USER_COUNT = 10
-EVENT_COUNT = 100
-PICTURE_COUNT = 2
-COMMENT_COUNT = 20
-UNIVERSITY_COUNT = 10
-MEMBERSHIP_COUNT = 20
-ORGANIZATION_COUNT = 10
-MAX_RATINGS_COUNT = 1000
-MAX_PUBLICITY_LEVEL = 3
+USER_COUNT = 10000
+EVENT_COUNT = 1000
+PICTURE_COUNT = 2000
+COMMENT_COUNT = 20000
+PUBLICITY_LEVEL_MAX = 3
 ENGLISH_FAKER = Faker()
+UNIVERSITY_COUNT = 1000
+RATINGS_COUNT_MAX = 1000
+MEMBERSHIP_COUNT = 50000
+ORGANIZATION_COUNT = 4000
 LOREM_FAKER = Faker("lt_LT")
 OUTPUT_PATH = "add_sample_data.sql"
 PICTURE_EXTENSIONS = (".jpg", ".png", ".bmp", ".gif", ".jpeg")
 ROAD_TYPES = ("Boulevard", "Lane", "Court", "Road", "Way", "Street")
 EMAIL_DOMAINS = (
+    "aol.com",
     "gmail.com",
     "yahoo.com",
-    "aol.com",
-    "bellsouth.net",
     "outlook.com",
     "yahoo.co.uk",
+    "bellsouth.net",
 )
 INSTITUTION_FORMATS = (
     "{0} University",
     "University of {0}",
-    "{0} State University",
     "{0} State College",
+    "{0} State University",
     "{0} Community College",
 )
 EVENT_FORMATS = (
     "Party for {0}",
     "Wake for {0}",
     "Extravaganza for {0}",
-    "The Wedding of {0} and {0}",
     "Church of {0} Meeting",
+    "The Wedding of {0} and {0}",
 )
 HEADER = (
     "/*\n"
@@ -207,14 +207,14 @@ class Event:
         self.description = LOREM_FAKER.paragraph()
         self.category = LOREM_FAKER.word()
         self.address = self.__generate_address()
-        self.publicity_level = random.randrange(1, MAX_PUBLICITY_LEVEL)
+        self.publicity_level = random.randrange(1, PUBLICITY_LEVEL_MAX)
         self.organization_id = organization_id
         self.university_id = university_id
         self.event_time = ENGLISH_FAKER.unix_time()
         self.contact_number = ENGLISH_FAKER.phone_number()
         self.contact_email = ENGLISH_FAKER.free_email()
-        self.ratings_count = random.randrange(1, MAX_RATINGS_COUNT)
-        self.ratings_average = random.randrange(1.0, 5.0)
+        self.ratings_count = random.randrange(1, RATINGS_COUNT_MAX)
+        self.ratings_average = random.uniform(1.0, 5.0)
 
 
     def __generate_address(self):
@@ -229,6 +229,16 @@ class Event:
         address.append(ENGLISH_FAKER.postcode())
 
         return " ".join(address)
+
+    
+    def __eq__(self, other):
+        """"""
+        return self.address == other.address and self.event_time == other.event_time
+
+
+    def __hash__(self):
+        """"""
+        return hash((self.address, self.event_time))
 
 
     def __str__(self):
@@ -309,6 +319,23 @@ class Membership:
         self.organization_id = organization_id
 
 
+    def __eq__(self, other):
+        """"""
+        return (
+            self.user_id == other.user_id and
+            self.organization_id == other.organization_id
+        )
+
+
+    def __hash__(self):
+        """"""
+        return hash((
+            self.user_id,
+            self.organization_id,
+            self.user_id - self.organization_id,
+        ))
+
+
     def __str__(self):
         """"""
         return self.INSERT.format(self.user_id, self.organization_id)
@@ -325,17 +352,24 @@ for organization in range(ORGANIZATION_COUNT):
             random.randrange(1, len(users))
         )
     )
-events = [Event(1, 1) for event in range(EVENT_COUNT)]
+events = set()
+for event in range(EVENT_COUNT):
+    events.add(
+        Event(
+            random.randrange(1, len(universities)),
+            random.randrange(1, len(organizations)),
+        )
+    )
 pictures = [Picture(random.randrange(1, len(events))) for count in range(PICTURE_COUNT)]
 comments = []
 for comment in range(COMMENT_COUNT):
     comments.append(Comment(random.randrange(1, len(events)), random.randrange(1, len(users))))
-memberships = []
+memberships = set()
 for membership in range(MEMBERSHIP_COUNT):
-    memberships.append(
+    memberships.add(
         Membership(
             random.randrange(1, len(users)),
-            random.randrange(1, len(organizations))
+            random.randrange(1, len(organizations)),
         )
     )
 
