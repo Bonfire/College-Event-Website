@@ -88,13 +88,34 @@ CREATE TABLE memberships (
 );
 
 DELIMITER $
-CREATE TRIGGER after_users_increment_university
+CREATE TRIGGER after_insert_increment_university
 AFTER INSERT ON users
 FOR EACH ROW
 BEGIN
     UPDATE universities
     SET student_count = student_count + 1
     WHERE id = NEW.university_id;
+END$
+CREATE TRIGGER after_delete_decrement_university
+BEFORE DELETE ON users
+FOR EACH ROW
+BEGIN
+    UPDATE universities
+    SET student_count = student_count - 1
+    WHERE id = OLD.university_id;
+END$
+CREATE TRIGGER after_update_change_universities
+AFTER UPDATE ON users
+FOR EACH ROW
+BEGIN
+    UPDATE universities
+    IF OLD.university_id <> NEW.university_id
+    THEN
+        SET student_count = student_count - 1
+        WHERE id = OLD.university_id
+        SET student_count = student_count + 1
+        WHERE id = NEW.university_id
+    END IF
 END$
 DELIMITER ;
 
