@@ -36,9 +36,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="organizations.php">Organizations</a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="universities.php">Universities<span class="sr-only">(current)</span></a>
-            </li>
         </ul>
     </div>
 

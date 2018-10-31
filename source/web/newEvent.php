@@ -36,9 +36,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="organizations.php">Organizations</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="universities.php">Universities</a>
-            </li>
         </ul>
     </div>
 
@@ -132,11 +129,11 @@ if (!empty($eventName) && !empty($RSO))
     }
 
     if ($query = $conn->prepare('
-        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, event_date, contact_number, contact_email, university_id)
-        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id, :event_length, :event_date, :contact_number, :contact_email, :university_id)')) 
+        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, contact_number, contact_email, university_id)
+        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id,:event_time, :contact_number, :contact_email, :university_id)')) 
     {  
         
-        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_length' => $length, ':event_date' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $_SESSION['univ'] ))) {
+        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $_SESSION['univ'] ))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();
@@ -268,7 +265,7 @@ if (!empty($eventName) && !empty($RSO))
                 });
 
                 map.addLayers([mapnik, vectors]);
-
+//Yeet
                 var fromProjection = new OpenLayers.Projection("EPSG:4326");
                 var toProjection   = new OpenLayers.Projection("EPSG:900913");
                 var position       = new OpenLayers.LonLat(-81.200108, 28.601966).transform( fromProjection, toProjection);
