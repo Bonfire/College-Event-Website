@@ -36,9 +36,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="organizations.php">Organizations<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="universities.php">Universities</a>
-            </li>
         </ul>
     </div>
 
@@ -99,7 +96,7 @@
             if($row)
             {
 
-            echo "<option value=\"$row[id]\">$row[name]</option>"; 
+            echo "<option value=\"$row[id]\">$row[id]</option>"; 
             }
 
         }
@@ -175,7 +172,7 @@ if (!empty($Org))
             VALUES (:user_id, :organization_id)')) 
         {  
             
-            if ($query->execute(array(':user_id' => $_SESSION['id'], ':organization_id' => '$Org'))) {
+            if ($query->execute(array(':user_id' => $_SESSION['id'], ':organization_id' => $Org))) {
                 echo $eventCreationSuccessAlert;
 
                 ob_end_flush();

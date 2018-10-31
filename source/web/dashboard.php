@@ -35,9 +35,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="organizations.php">Organizations</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="universities.php">Universities</a>
-            </li>
         </ul>
     </div>
 
@@ -179,8 +176,8 @@
                 }      
 
                 echo "<tr>
-                          <td style=\"max-width: 30px\">$org[name]</td>
-                          <td>Description Field to be added</td>
+                          <td style=\"width: 25%\">$org[name]</td>
+                          <td>$org[description]</td>
                       </tr>
                 ";
             }
@@ -216,6 +213,11 @@
                             <div>
                                 <a href=\"users.php\">
                                     <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Users</button>
+                                </a>
+                            </div>
+                            <div>
+                                <a href=\"universities.php\">
+                                    <button type=\"button\" class=\"btn btn-warning mr-2 my-sm-0\">Manage Universities</button>
                                 </a>
                             </div>
                             <hr class=\"bg-light\">

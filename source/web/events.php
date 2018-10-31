@@ -36,9 +36,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="organizations.php">Organizations</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="universities.php">Universities</a>
-            </li>
         </ul>
     </div>
 
@@ -131,110 +128,108 @@
         die();
     }
 
-    $sql="SELECT * FROM `events` E";
+    $sql="SELECT DISTINCT * FROM `events` E where (E.publicity_level = 0) OR (E.publicity_level = 1 AND E.university_id = '$_SESSION[univ]')";
 
-    /*where E.publicity_level = '$all'
-            JOIN
-            SELECT * FROM `events` E, `users` U, `memberships` M  where E.publicity_level='$Students'
-            AND E.university_id = U.university_id AND U.id = '$id')
-            JOIN
-            SELECT * FROM events E, users U, memberships M  where(E.publicity_level='Members' AND E.university_id =U.university_id AND U.id = '$id' AND M.user_id = U.id AND M.organization_id = E.organization_id)
-        */
+    $sql2 ="SELECT DISTINCT * FROM `events` E, `memberships` M where(E.publicity_level = 2 AND E.university_id = '$_SESSION[univ]' AND M.organization_id = E.organization_id AND M.user_id = '$_SESSION[id]')";
 
-    if($query= $conn->prepare($sql))
-    {
-      $query->execute();
+    display($sql, $conn);
+    display($sql2, $conn);
 
-        foreach ($query as $row)
-        {
+	function display($sql, $conn){
+	    if($query= $conn->prepare($sql))
+	    {
+	      $query->execute();
 
-            if($row)
-            {
+	        foreach ($query as $row)
+	        {
 
-                $RSO = "SELECT name FROM organizations where organizations.id = '$row[organization_id]' LIMIT 0,1";
-                $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
+	            if($row)
+	            {
 
-                if($query2 = $conn->prepare($RSO))
-                {
-                    $query2->execute();
-                    $RSO = $query2->fetch(PDO::FETCH_ASSOC);
-                }
+	                $RSO = "SELECT name FROM organizations where organizations.id = '$row[organization_id]' LIMIT 0,1";
+	                $University = "SELECT name FROM universities where universities.id = '$row[university_id]' LIMIT 0,1";
 
-                if($query2 = $conn->prepare($University))
-                {
-                    $query2->execute();
-                    $University = $query2->fetch(PDO::FETCH_ASSOC);
-                }
+	                if($query2 = $conn->prepare($RSO))
+	                {
+	                    $query2->execute();
+	                    $RSO = $query2->fetch(PDO::FETCH_ASSOC);
+	                }
 
-                if(($row['publicity_level']) == 0){
-                    $level = "Open For All";
-                }
-                else if(($row['publicity_level']) == 1){
-                    $level = "University Students Only";
-                }
-                else{
-                    $level = "RSO Members Only";
-                }
+	                if($query2 = $conn->prepare($University))
+	                {
+	                    $query2->execute();
+	                    $University = $query2->fetch(PDO::FETCH_ASSOC);
+	                }
 
-                $eventDate = "event_date";
-                $timezone = new DateTimeZone( "UTC" );
-                $date = DateTime::createFromFormat('U', $row[$eventDate], $timezone);
-                $date = $date->format('m-d-y h:i a');
-                
-                $length = $row['event_time'] / 60;
-                $lonLat = explode(" ", $row['address']);
+	                if(($row['publicity_level']) == 0){
+	                    $level = "Open For All";
+	                }
+	                else if(($row['publicity_level']) == 1){
+	                    $level = "University Students Only";
+	                }
+	                else{
+	                    $level = "RSO Members Only";
+	                }
 
-                if(count($lonLat) == 2){
-                    $lon = (float) $lonLat[0];
-                    $lat = (float) $lonLat[1]; 
-                    $flag = 0;
-                }
-                else
-                {
-                    $flag = 1;
-                }
-                    
-                  echo "<tr>
-                          <td>$row[name]</td>
-                          <td>$row[category]</td>
-                          <td>$row[description]</td>
-                          <td>$date</td>
-                          <td>$length hours</td>
-                          ";
+	                $timezone = new DateTimeZone( "UTC" );
+	                $date = DateTime::createFromFormat('U', $row['event_time'], $timezone);
+	                $date = $date->format('m-d-y h:i a');
+	                
+	                $length = $row['event_time'] / 60;
+	                $lonLat = explode(" ", $row['address']);
+
+	                if(count($lonLat) == 2){
+	                    $lon = (float) $lonLat[0];
+	                    $lat = (float) $lonLat[1]; 
+	                    $flag = 0;
+	                }
+	                else
+	                {
+	                    $flag = 1;
+	                }
+	                    
+	                  echo "<tr>
+	                          <td>$row[name]</td>
+	                          <td>$row[category]</td>
+	                          <td>$row[description]</td>
+	                          <td>$date</td>
+	                          <td>Length Variable to be Re-added $length also need to fix event entry hours</td>
+	                          ";
 
 
-                if( $flag == 1)
-                    echo "<td>No Location Given</td>";
-                else
-                    echo "
-                          <td style=\"margin: 0; padding: 0\">
-                            <div id=\"map_canvas\" style=\"width:256px; height:256px; margin: 0; padding: 0\"></div>
-                          </td>
-                          
-                      <script src=\"OpenLayers.js\"></script>
-                      <script>
-                            map = new OpenLayers.Map('map_canvas');
-                            var mapnik = new OpenLayers.Layer.OSM();
-                            var markers = new OpenLayers.Layer.Markers( \"Markers\" );
+	                if( $flag == 1)
+	                    echo "<td>No Location Given</td>";
+	                else
+	                    echo "
+	                          <td style=\"margin: 0; padding: 0\">
+	                            <div id=\"map_canvas\" style=\"width:256px; height:256px; margin: 0; padding: 0\"></div>
+	                          </td>
+	                          
+	                      <script src=\"OpenLayers.js\"></script>
+	                      <script>
+	                            map = new OpenLayers.Map('map_canvas');
+	                            var mapnik = new OpenLayers.Layer.OSM();
+	                            var markers = new OpenLayers.Layer.Markers( \"Markers\" );
 
-                            map.addLayers([mapnik, markers]);
-                            var position = new OpenLayers.LonLat($lon, $lat);
+	                            map.addLayers([mapnik, markers]);
+	                            var position = new OpenLayers.LonLat($lon, $lat);
 
-                            map.setCenter(position, 14);
-                            markers.addMarker(new OpenLayers.Marker(position));
-                      </script>";
+	                            map.setCenter(position, 14);
+	                            markers.addMarker(new OpenLayers.Marker(position));
+	                      </script>";
 
-                  echo "
-                        <td>$row[contact_number]</td>
-                          <td>$row[contact_email]</td>
-                          <td>$University[name]</td>
-                          <td>$RSO[name]</td>
-                          <td>$level</td>
-                      </tr>
-                  ";
-            }
-        }
-    }
+	                  echo "
+	                        <td>$row[contact_number]</td>
+	                          <td>$row[contact_email]</td>
+	                          <td>$University[name]</td>
+	                          <td>$RSO[name]</td>
+	                          <td>$level</td>
+	                      </tr>
+	                  ";
+	            }
+	        }
+	    }
+	}
 ?>
                 </tbody>
                 </table>

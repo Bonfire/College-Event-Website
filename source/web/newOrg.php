@@ -36,9 +36,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="organizations.php">Organizations</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="universities.php">Universities</a>
-            </li>
         </ul>
     </div>
 
@@ -59,7 +56,7 @@ include('database.inc.php');
 
 $eventCreationSuccessAlert = "
         <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
-        University Created!
+        Organization Created!
         <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
         <span aria-hidden=\"true\">&times;</span>
         </button>
@@ -91,11 +88,11 @@ if (isset($_POST)
 if (!empty($Name)  && !empty(($description)))
 {
     if ($query = $conn->prepare('
-        INSERT INTO organizations (name, owner_id, university_id)
-        VALUES (:name, :owner, :university)')) 
+        INSERT INTO organizations (name, owner_id, university_id, description)
+        VALUES (:name, :owner, :university, :description)')) 
     {  
         
-        if ($query->execute(array(':name' => $Name, ':owner' => $_SESSION['id'], ':university' => $_SESSION['univ']))) {
+        if ($query->execute(array(':name' => $Name, ':owner' => $_SESSION['id'], ':university' => $_SESSION['univ'], ':description' => $description))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();

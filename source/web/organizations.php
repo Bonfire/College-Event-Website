@@ -36,9 +36,6 @@
             <li class="nav-item active">
                 <a class="nav-link" href="organizations.php">Organizations<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="universities.php">Universities</a>
-            </li>
         </ul>
     </div>
 
@@ -129,7 +126,7 @@
         die();
     }
 
-    $sql="SELECT * FROM `organizations` O";
+    $sql="SELECT * FROM organizations where organizations.university_id ='$_SESSION[univ]'";
 
     if($query= $conn->prepare($sql))
     {
@@ -156,7 +153,7 @@
 
                 echo "<tr>
                           <td>$row[name]</td>
-                          <td>Description Field to be added</td>
+                          <td>$row[description]</td>
                           <td>$University[name]</td>
                           <td>$User[first_name] $User[last_name]</td>
                       </tr>
