@@ -361,6 +361,14 @@ if (!empty($eventName) && !empty($RSO))
             
             $length = $result['event_time'] / 60;
 
+            $lonLat = explode(" ", $result['address']);
+
+            if(count($lonLat) == 2){
+                $lon = (float) $lonLat[0];
+                $lat = (float) $lonLat[1]; 
+                $flag = 0;
+            }
+
             echo "
                 <script>
                     document.getElementById(\"inputEventName\").value = \"$result[name]\";
@@ -374,6 +382,10 @@ if (!empty($eventName) && !empty($RSO))
                     document.getElementById(\"inputContactPhone\").value = \"$result[contact_number]\";
                     document.getElementById(\"inputContactEmail\").value = \"$result[contact_email]\";
                     document.getElementById(\"inputRSO\").value = \"$result[organization_id]\";
+
+                    var position = new OpenLayers.LonLat($lon, $lat);
+                    map.setCenter(position, 14);
+                    markers.addMarker(new OpenLayers.Marker(position));
                 </script>
             ";
         }
