@@ -188,7 +188,7 @@
 	                    $flag = 1;
 	                }
 	                    
-	                  echo "<tr>
+	                  echo "<tr onClick=\"location.href='viewEvent.php?event=$row[id]';\">
 	                          <td>$row[name]</td>
 	                          <td>$row[category]</td>
 	                          <td>$row[description]</td>
