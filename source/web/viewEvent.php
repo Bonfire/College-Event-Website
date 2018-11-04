@@ -111,7 +111,7 @@
             if($_SESSION['id'] == $result['owner_id'])
             {
                 echo "
-                     <a href=\"editEvent.php\">
+                     <a href=\"editEvent.php?event=$_GET[event]\">
                         <button type=\"button\" class=\"btn btn-secondary\">Edit Event</button>
                     </a>
                 ";

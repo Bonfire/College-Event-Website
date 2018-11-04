@@ -56,7 +56,7 @@ include('database.inc.php');
 
 $eventCreationSuccessAlert = "
         <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
-        Event Created!
+        Event Updated!
         <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
         <span aria-hidden=\"true\">&times;</span>
         </button>
@@ -128,23 +128,25 @@ if (!empty($eventName) && !empty($RSO))
         }  
     }
 
-    if ($query = $conn->prepare('
-        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, contact_number, contact_email, university_id)
-        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id,:event_time, :contact_number, :contact_email, :university_id)')) 
-    {  
-        
-        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $_SESSION['univ'] ))) {
-            echo $eventCreationSuccessAlert;
+    $date = $date->format('U');
 
-            ob_end_flush();
-            flush();
-            sleep(3);
+    $sql = "
+        UPDATE events 
+        SET name = '$eventName', description = '$description', category = '$state', address= '$location', publicity_level = '$publicity', organization_id = $RSO, event_time=$date, contact_number = '$phone', contact_email = '$email', university_id= '$_SESSION[univ]'
+        WHERE id = '$_GET[event]'
+        ";
 
-            echo "<script type=\"text/javascript\">window.location.href='events.php';</script>";
-        }
-        else {
-            echo $errorConnectingAlert;
-        }
+    if ($conn->query($sql)) {
+        echo $eventCreationSuccessAlert;
+
+        ob_end_flush();
+        flush();
+        sleep(3);
+
+        echo "<script type=\"text/javascript\">window.location.href='events.php';</script>";
+    }
+    else {
+        echo $errorConnectingAlert;
     }
 }
 ?>
@@ -239,7 +241,7 @@ if (!empty($eventName) && !empty($RSO))
                         </div>
                         <div class="form-group col-6">
                             <label for="inputLength">Event Length (hours)</label>
-                            <input type="text" class="form-control" id="inputLength" placeholder="1.5" name="inputLength" required="">
+                            <input type="text" class="form-control" id="inputLength" placeholder="1.5" name="inputLength">
                         </div>
                     </div>
                     <div class="form-group">
@@ -354,28 +356,16 @@ if (!empty($eventName) && !empty($RSO))
 
             $timezone = new DateTimeZone( "UTC" );
             $date = DateTime::createFromFormat('U', $result['event_time'], $timezone);
-            $time = $date->format('h:i a');
-            $date = $date->format('m-d-y');
+            $time = $date->format('H:i');
+            $date = $date->format('Y-m-d');
             
             $length = $result['event_time'] / 60;
-
-
-            if(($result['publicity_level']) == 0){
-                $level = "Open For All";
-            }
-            else if(($result['publicity_level']) == 1){
-                $level = "University Students Only";
-            }
-            else{
-                $level = "RSO Members Only";
-            }
 
             echo "
                 <script>
                     document.getElementById(\"inputEventName\").value = \"$result[name]\";
-                    document.getElementById(\"inputUniversity\").value = \"$University[name]\";
                     document.getElementById(\"inputState\").value = \"$result[category]\";
-                    document.getElementById(\"inputPublicity\").value = \"$level\";
+                    document.getElementById(\"inputPublicity\").value = \"$result[publicity_level]\";
                     document.getElementById(\"inputEventDescription\").value = \"$result[description]\";
                     document.getElementById(\"inputLength\").value = \"$length\";
                     document.getElementById(\"inputEventTime\").value = \"$time\";
@@ -383,7 +373,7 @@ if (!empty($eventName) && !empty($RSO))
                     document.getElementById(\"inputLocation\").value = \"$result[address]\";
                     document.getElementById(\"inputContactPhone\").value = \"$result[contact_number]\";
                     document.getElementById(\"inputContactEmail\").value = \"$result[contact_email]\";
-                    document.getElementById(\"inputRSO\").value = \"$RSO[name]\";
+                    document.getElementById(\"inputRSO\").value = \"$result[organization_id]\";
                 </script>
             ";
         }
