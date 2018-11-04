@@ -96,7 +96,7 @@
             if($row)
             {
 
-            echo "<option value=\"$row[id]\">$row[id]</option>"; 
+            echo "<option value=\"$row[id]\">$row[name]</option>"; 
             }
 
         }
@@ -245,8 +245,8 @@ if (!empty($Org))
                 }      
 
                 echo "<tr>
-                          <td style=\"max-width: 30px\">$org[name]</td>
-                          <td>Description Field to be added</td>
+                          <td style=\"min-width: 25%\">$org[name]</td>
+                          <td>$org[description]</td>
                       </tr>
                 ";
             }

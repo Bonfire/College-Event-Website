@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="utf-8">
 
-    <title>College Events - New Event</title>
+    <title>College Events - Event</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -155,7 +155,7 @@ if (!empty($eventName) && !empty($RSO))
             <div style="margin-bottom: 3%">
                 <form class="form-inline" action="" method="POST">
                     <div class="form-row">
-                        <span class="mx-auto"><h4>New Event</h4></span>
+                        <span class="mx-auto"><h4>Event</h4></span>
                     </div>
                     <hr class="bg-light">
                     <div class="form-group">
@@ -177,7 +177,7 @@ if (!empty($eventName) && !empty($RSO))
                     <div class="form-group">
                         <label for="inputPublicity">Event Publicity</label>
                         <select id="inputPublicity" class="form-control" name="inputPublicity">
-                            <option selected value=""></option>
+                            <option value=""></option>
                             <option value="0">Open For All</option>
                             <option value="1">University Students Only</option>
                             <option value="2">RSO Members Only</option>
@@ -306,11 +306,93 @@ if (!empty($eventName) && !empty($RSO))
                         Changes
                     </button>
                 </div>
+
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        //session_start();
+    }
+
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
+
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
+
+    $sql="SELECT DISTINCT * FROM `events` E where E.id = '$_GET[event]' ";
+
+    if($query= $conn->prepare($sql))
+    {
+      $query->execute();
+      $result= $query->fetch(PDO::FETCH_ASSOC);
+
+        if($result)
+        {
+            $RSO = "SELECT name FROM organizations where organizations.id = '$result[organization_id]' LIMIT 0,1";
+            $University = "SELECT name FROM universities where universities.id = '$result[university_id]' LIMIT 0,1";
+
+            if($query2 = $conn->prepare($RSO))
+            {
+                $query2->execute();
+                $RSO = $query2->fetch(PDO::FETCH_ASSOC);
+            }
+
+            if($query2 = $conn->prepare($University))
+            {
+                $query2->execute();
+                $University = $query2->fetch(PDO::FETCH_ASSOC);
+            }
+
+            $timezone = new DateTimeZone( "UTC" );
+            $date = DateTime::createFromFormat('U', $result['event_time'], $timezone);
+            $time = $date->format('h:i a');
+            $date = $date->format('m-d-y');
+            
+            $length = $result['event_time'] / 60;
+
+
+            if(($result['publicity_level']) == 0){
+                $level = "Open For All";
+            }
+            else if(($result['publicity_level']) == 1){
+                $level = "University Students Only";
+            }
+            else{
+                $level = "RSO Members Only";
+            }
+
+            echo "
+                <script>
+                    document.getElementById(\"inputEventName\").value = \"$result[name]\";
+                    document.getElementById(\"inputUniversity\").value = \"$University[name]\";
+                    document.getElementById(\"inputState\").value = \"$result[category]\";
+                    document.getElementById(\"inputPublicity\").value = \"$level\";
+                    document.getElementById(\"inputEventDescription\").value = \"$result[description]\";
+                    document.getElementById(\"inputLength\").value = \"$length\";
+                    document.getElementById(\"inputEventTime\").value = \"$time\";
+                    document.getElementById(\"inputEventDate\").value = \"$date\";
+                    document.getElementById(\"inputLocation\").value = \"$result[address]\";
+                    document.getElementById(\"inputContactPhone\").value = \"$result[contact_number]\";
+                    document.getElementById(\"inputContactEmail\").value = \"$result[contact_email]\";
+                    document.getElementById(\"inputRSO\").value = \"$RSO[name]\";
+                </script>
+            ";
+        }
+    }
+?>
             </div>
         </div>
     </div>
 </form>
 </div>
-
 </body>
 </html>
