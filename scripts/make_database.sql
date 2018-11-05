@@ -49,6 +49,7 @@ CREATE TABLE events (
     organization_id INT,
     university_id INT,
     event_time INT,
+    event_length INT,
     contact_number VARCHAR(20),
     contact_email VARCHAR(100),
     ratings_count INT,

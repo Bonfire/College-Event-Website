@@ -199,9 +199,9 @@ class Event:
     INSERT = (
         "INSERT INTO events "
         "(name, description, category, address, publicity_level, organization_id,"
-        " university_id, event_time, contact_number, contact_email,"
+        " university_id, event_time, event_length, contact_number, contact_email,"
         " ratings_count, ratings_average) VALUES "
-        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', '{9}', {10}, {11});\n"
+        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', '{9}', {10}, {11}, {12});\n"
     )
 
     def __init__(self, university_id, organization_id):
@@ -214,6 +214,7 @@ class Event:
         self.organization_id = organization_id
         self.university_id = university_id
         self.event_time = random.randrange(UNIX_START_TIME, UNIX_STOP_TIME)
+        self.event_length = random.randint(1,5)
         self.contact_number = ENGLISH_FAKER.phone_number()
         self.contact_email = ENGLISH_FAKER.free_email()
         self.ratings_count = random.randrange(1, RATINGS_COUNT_MAX)
@@ -241,6 +242,7 @@ class Event:
             self.organization_id,
             self.university_id,
             self.event_time,
+            self.event_length,
             self.contact_number,
             self.contact_email,
             self.ratings_count,
@@ -252,12 +254,8 @@ class Event:
         """Generate a random address."""
         address = []
 
-        address.append(ENGLISH_FAKER.building_number())
-        address.append(ENGLISH_FAKER.last_name())
-        address.append(random.choice(ROAD_TYPES) + ",")
-        address.append(ENGLISH_FAKER.city() + ",")
-        address.append(ENGLISH_FAKER.state_abbr())
-        address.append(ENGLISH_FAKER.postcode())
+        address.append(random.uniform(-9094023.322, -9075678.436) + " ")
+        address.append(random.uniform(3003684.950, 3576045.381))
 
         return " ".join(address)
 
