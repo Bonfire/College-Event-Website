@@ -290,7 +290,7 @@
             $time = $date->format('h:i a');
             $date = $date->format('m-d-y');
             
-            $length = $result['event_time'] / 60;
+            $length = $result['event_length'] / 60;
 
 
             if(($result['publicity_level']) == 0){

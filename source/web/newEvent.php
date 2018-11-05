@@ -129,11 +129,11 @@ if (!empty($eventName) && !empty($RSO))
     }
 
     if ($query = $conn->prepare('
-        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, contact_number, contact_email, university_id)
-        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id,:event_time, :contact_number, :contact_email, :university_id)')) 
+        INSERT INTO events (name, description, category, address, publicity_level, organization_id, event_time, contact_number, contact_email, university_id, event_length)
+        VALUES (:name, :description, :category, :address, :publicity_level, :organization_id,:event_time, :contact_number, :contact_email, :university_id, :event_length)')) 
     {  
         
-        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $_SESSION['univ'] ))) {
+        if ($query->execute(array(':name' => $eventName, ':description' => $description, ':category' => $state, ':address' => $location, ':publicity_level' => $publicity, ':organization_id' => $RSO, ':event_time' => $date->format('U'), ':contact_number' => $phone, ':contact_email' => $email, ':university_id' => $_SESSION['univ'], ':event_length' => $length ))) {
             echo $eventCreationSuccessAlert;
 
             ob_end_flush();

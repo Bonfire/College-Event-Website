@@ -359,7 +359,7 @@ if (!empty($eventName) && !empty($RSO))
             $time = $date->format('H:i');
             $date = $date->format('Y-m-d');
             
-            $length = $result['event_time'] / 60;
+            $length = $result['event_lenght'] / 60;
 
             $lonLat = explode(" ", $result['address']);
 
