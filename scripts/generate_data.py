@@ -254,8 +254,8 @@ class Event:
         """Generate a random address."""
         address = []
 
-        address.append(random.uniform(-9094023.322, -9075678.436) + " ")
-        address.append(random.uniform(3003684.950, 3576045.381))
+        address.append(str(random.uniform(-9094023.322, -9075678.436)) + " ")
+        address.append(str(random.uniform(3003684.950, 3576045.381)))
 
         return " ".join(address)
 
