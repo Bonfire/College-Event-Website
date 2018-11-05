@@ -201,7 +201,7 @@ class Event:
         "(name, description, category, address, publicity_level, organization_id,"
         " university_id, event_time, event_length, contact_number, contact_email,"
         " ratings_count, ratings_average) VALUES "
-        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, '{8}', '{9}', {10}, {11}, {12});\n"
+        "('{0}', '{1}', '{2}', '{3}', {4}, {5}, {6}, {7}, {8}, '{9}', '{10}', {11}, {12});\n"
     )
 
     def __init__(self, university_id, organization_id):
