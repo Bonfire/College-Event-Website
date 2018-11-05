@@ -214,7 +214,7 @@ class Event:
         self.organization_id = organization_id
         self.university_id = university_id
         self.event_time = random.randrange(UNIX_START_TIME, UNIX_STOP_TIME)
-        self.event_length = random.randint(1,5)
+        self.event_length = random.randint(1,12)*60
         self.contact_number = ENGLISH_FAKER.phone_number()
         self.contact_email = ENGLISH_FAKER.free_email()
         self.ratings_count = random.randrange(1, RATINGS_COUNT_MAX)
