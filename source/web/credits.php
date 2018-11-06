@@ -37,10 +37,10 @@
             <div class="container col-6 col-md-4 card p-3 bg-dark shadow" style="margin-top: 10%;">
                 <span class="mx-auto text-light"><h4>Group 5</h4></span>
                 <hr class="bg-light">
-                <span class="mx-auto text-light">Jonathan Ponader</span>
-                <span class="mx-auto text-light">Baran Barut</span>
-                <span class="mx-auto text-light">Tiger Sachse</span>
-                <span class="mx-auto text-light">Barath Tirumala</span>
+                <span class="mx-auto text-light"><a href="https://www.github.com/Jponader" target="_blank">Jonathan Ponader</a></span>
+                <span class="mx-auto text-light"><a href="https://www.github.com/Bonfire" target="_blank">Baran Barut</a></span>
+                <span class="mx-auto text-light"><a href="https://www.github.com/tgsachse" target="_blank">Tiger Sachse</a></span>
+                <span class="mx-auto text-light"><a href="https://www.github.com/btirumala1219" target="_blank">Barath Tirumala</a></span>
             </div>
         </div>
     </form>
