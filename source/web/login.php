@@ -146,7 +146,7 @@ if (!empty($email) && !empty($password)) {
 </div>
 <div style="width: 100%; text-align: center">
     <br><br>
-    <text>made by <b>Group 5</b></text>
+    <text>made by <b><a href="credits.php">Group 5</a></b></text>
 </div>
 </body>
 </html>
