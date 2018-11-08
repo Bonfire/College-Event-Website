@@ -54,14 +54,13 @@ if(!isset($_SESSION)){
 
 include('database.inc.php');
 
-$commentCreationSuccessAlert = "
+$commentDeletionSuccessAlert = "
         <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
-        Comment Updated!
+        Comment Deleted!
         <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
         <span aria-hidden=\"true\">&times;</span>
         </button>
         </div>";
-
 
 $errorConnectingAlert = "
         <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
@@ -85,15 +84,13 @@ if (isset($_POST)
 
     if (!empty($comment))
     {
-
         $sql = "
-            UPDATE comments 
-            SET comment = '$comment'
+            DELETE FROM comments 
             WHERE id = '$_GET[comment]'
             ";
 
         if ($conn->query($sql)) {
-            echo $commentCreationSuccessAlert;
+            echo $commentDeletionSuccessAlert;
 
             ob_end_flush();
             flush();
@@ -122,7 +119,7 @@ if (isset($_POST)
 
                     <div class="form-group">
                         <label for="inputComment">Comment</label>
-                        <input type="text" class="form-control" id="inputComment" name="inputComment" placeholder="This art exhibit...">
+                        <input type="text" class="form-control" id="inputComment" name="inputComment" readonly>
                 </form>
                 <div class="modal-footer d-flex justify-content-between">
 <?php
@@ -130,8 +127,8 @@ if (isset($_POST)
 ?>
                         <button type="button" class="btn btn-secondary">Back</button>
                     </a>
-                    <button type="submit" class="btn btn-primary" id="addEventButton">Save
-                        Changes
+                    <button type="submit" class="btn btn-danger" id="addEventButton">
+                        Delete
                     </button>
                 </div>
 

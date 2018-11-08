@@ -461,8 +461,15 @@ if (!empty($comments))
                           <td style=\"min-width: 25%\">$name[first_name] </td>
                           <td>$row[comment]</td>
                           <td>
-                            <a type=\"button\" class=\"btn btn-primary\" id=\"editComment\" href='editComment.php?comment=$row[Id]';>Edit</a>
-                          </td>
+                        ";
+                
+                if($row['user_id'] == $_SESSION['id'])            
+                    echo "
+                            <a type=\"button\" class=\"btn btn-primary\" id=\"editComment\" href='editComment.php?comment=$row[Id]&event=$_GET[event]';>Edit</a>
+                            <a type=\"button\" class=\"btn btn-danger\" id=\"editComment\" href='deleteComment.php?comment=$row[Id]&event=$_GET[event]';>Delete</a>
+                        ";
+
+                echo "      </td>
                       </tr>
                 ";
             }
