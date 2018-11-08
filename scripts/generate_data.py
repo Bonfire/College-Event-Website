@@ -287,7 +287,7 @@ class Picture:
 
 class Comment:
     """Class that holds randomized data for a comment entry in the database."""
-    INSERT = "INSERT INTO comments VALUES ({0}, {1}, {2}, '{3}');\n"
+    INSERT = "INSERT INTO comments (event_id, time, user_id, comment) VALUES ({0}, {1}, {2}, '{3}');\n"
 
     def __init__(self, event_id, user_id):
         """Initialize this comment with some identifiers and other fields."""

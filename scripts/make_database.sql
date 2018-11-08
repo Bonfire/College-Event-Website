@@ -72,7 +72,7 @@ CREATE TABLE comments (
     event_id INT,
     time INT,
     user_id INT,
-    text VARCHAR(300),
+    comment VARCHAR(300),
     PRIMARY KEY (Id),
     FOREIGN KEY (user_id)
     REFERENCES users(id),
