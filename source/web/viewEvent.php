@@ -329,6 +329,155 @@
         </div>
     </div>
 </form>
+
+
+<form action="" method="post">
+    <div class="card w-75 mx-auto container-fluid p-3 bg-light shadow" style="margin-top: 5%">
+        <div class="card-body">
+            <div style="margin-bottom: 3%">
+                <form class="form-inline" action="" method="POST">
+                    <div class="form-row">
+                <span class="mx-auto"><h4>Comments</h4></span>
+                </div>
+                <hr class="bg-light">
+                <div class="table-responsive">
+
+                        <div class="form-group col-6">
+                            <label for="inputContactPhone">Comment</label>
+                            <input type="text" class="form-control" id="inputComment" name="inputComment" >
+                             <button type="submit" class="btn btn-primary" id="addCommentButton">Comment</button>
+                        </div>
+
+<?php
+
+if(!isset($_SESSION)){
+    session_start();
+}
+
+include('database.inc.php');
+
+$eventCreationSuccessAlert = "
+        <div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">
+        Comment Inserted!
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+$errorConnectingAlert = "
+        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+        Error querying the database
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+        <span aria-hidden=\"true\">&times;</span>
+        </button>
+        </div>";
+
+
+// Check database connection
+if (!$conn) {
+    echo $errorConnectingAlert;
+    die();
+}
+
+if (isset($_POST)
+    && isset($_POST['inputComment'])
+){
+
+    $comments = $_POST["inputComment"];
+}
+
+if (!empty($comments))
+{
+    if ($query = $conn->prepare('
+        INSERT INTO comments ( event_id, user_id, comment)
+        VALUES (:event_id, :user_id, :comment)')) 
+    {  
+        
+        if ($query->execute(array(':event_id' => $_GET['event'], ':user_id' => $_SESSION['id'], ':comment' => $comments))) {
+
+            ob_end_flush();
+            flush();
+
+            echo "<script type=\"text/javascript\">window.location.href='viewEvent.php?event= '$_GET[event]'';</script>";
+        }
+        else {
+            echo $errorConnectingAlert;
+        }
+    }
+}
+?>
+
+                    <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;" >
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Comment</th>
+                            <th scope="col">Modify</th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="tableEvents">
+
+<?php
+    include('database.inc.php');
+
+    if(!isset($_SESSION)){
+        //session_start();
+    }
+
+    $errorConnectingAlert = "
+            <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            Error querying the database
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times;</span>
+            </button>
+            </div>";
+
+    // Check database connection
+    if (!$conn) {
+        echo $errorConnectingAlert;
+        die();
+    }
+
+    $sql="SELECT * FROM `comments` c WHERE c.event_id = $_GET[event]";
+
+    if($query= $conn->prepare($sql))
+    {
+      $query->execute();
+
+        foreach ($query as $row)
+        {
+            if($row)
+            {  
+                $name = "SELECT * FROM users where users.id = '$row[user_id]' LIMIT 0,1";
+
+                if($query2 = $conn->prepare($name))
+                {
+                    $query2->execute();
+                    $name = $query2->fetch(PDO::FETCH_ASSOC);
+                }      
+
+                echo "<tr>
+                          <td style=\"min-width: 25%\">$name[first_name] </td>
+                          <td>$row[comment]</td>
+                          <td>
+                            <a type=\"button\" class=\"btn btn-primary\" id=\"editComment\" href='editComment.php?comment=$row[Id]';>Edit</a>
+                          </td>
+                      </tr>
+                ";
+            }
+        }
+    }
+?>  
+                    </tbody>
+                    </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</form>
+
 </div>
 </body>
 </html>

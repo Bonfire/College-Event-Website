@@ -68,10 +68,12 @@ CREATE TABLE pictures (
     REFERENCES events(id)
 );
 CREATE TABLE comments (
+    Id INT AUTO_INCREMENT,
     event_id INT,
     time INT,
     user_id INT,
-    text VARCHAR(300),
+    comment VARCHAR(300),
+    PRIMARY KEY (Id),
     FOREIGN KEY (user_id)
     REFERENCES users(id),
     FOREIGN KEY (event_id)
